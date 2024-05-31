@@ -3,6 +3,7 @@ package com.swp391.jewelrysalessystem.Controllers;
 import com.swp391.jewelrysalessystem.JWTConfig.JWTUtil;
 import com.swp391.jewelrysalessystem.models.User;
 import com.swp391.jewelrysalessystem.repositories.UserRepo;
+import jakarta.annotation.security.RolesAllowed;
 import org.apache.catalina.mapper.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ public class UserController {
     }
 
     @GetMapping(path = "/viewalluser")
+    @RolesAllowed(value = "admin")
     public ResponseEntity<List<User>> viewAllUser() {
 
         List<User> users = _userrepo.findAll();
