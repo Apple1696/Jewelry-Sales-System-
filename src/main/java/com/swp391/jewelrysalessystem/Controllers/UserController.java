@@ -1,6 +1,7 @@
 package com.swp391.jewelrysalessystem.Controllers;
 
 import com.swp391.jewelrysalessystem.JWTConfig.JWTUtil;
+import com.swp391.jewelrysalessystem.models.Role;
 import com.swp391.jewelrysalessystem.models.User;
 import com.swp391.jewelrysalessystem.repositories.UserRepo;
 import jakarta.annotation.security.RolesAllowed;
@@ -21,14 +22,20 @@ public class UserController {
     private UserRepo _userrepo;
 
     @GetMapping(path = "/login")
-    public String login(@RequestBody User user) {
+    public String login() {
+        Role r = new Role();
 
-        String token = jwtUtil.generateToken(user);
+        r.setName("ROLE_USER");
+        r.setDescription("ROLE_USER");
+
+        User u = new User();
+        u.setName("tung");
+        u.setRole(r);
+        String token = jwtUtil.generateToken(u);
         return token;
     }
 
     @GetMapping(path = "/viewalluser")
-    @RolesAllowed(value = "admin")
     public ResponseEntity<List<User>> viewAllUser() {
 
         List<User> users = _userrepo.findAll();
