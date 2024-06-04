@@ -41,6 +41,11 @@ const Sidebar = ({children}) => {
             icon:<BsCurrencyDollar/>
         },
         {
+            path:"/promotion",
+            name:"Rebuy",
+            icon:<BsCurrencyDollar/>
+        },
+        {
             path:"/logout",
             name:"Logout",
             icon:<IoMdExit />

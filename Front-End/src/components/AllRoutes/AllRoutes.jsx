@@ -7,6 +7,7 @@ import OrderReport from './../pages/OrderReport';
 import Promotion from './../pages/Promotion';
 import Product from './../pages/Product';
 import Logout from './../pages/Logout';
+import AddProduct from '../pages/AddProduct';
 
 
 
@@ -21,6 +22,7 @@ const AllRoutes = () => {
           <Route path="/order-report" element={<OrderReport />} />
           <Route path="/promotion" element={<Promotion />} />
           <Route path="/product" element={<Product />} />
+          <Route path="/add-product" element={<AddProduct />} />
           <Route path="/logout" element={<Logout />} />
         </Routes>
       </Sidebar>
