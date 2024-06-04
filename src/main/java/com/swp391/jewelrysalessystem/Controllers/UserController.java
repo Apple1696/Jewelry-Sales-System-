@@ -4,6 +4,7 @@ import com.swp391.jewelrysalessystem.JWTConfig.JWTUtil;
 import com.swp391.jewelrysalessystem.models.Role;
 import com.swp391.jewelrysalessystem.models.User;
 import com.swp391.jewelrysalessystem.repositories.UserRepo;
+import com.swp391.jewelrysalessystem.services.UserService;
 import jakarta.annotation.security.RolesAllowed;
 import org.apache.catalina.mapper.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +15,16 @@ import java.util.List;
 
 @RestController(value = "/user")
 public class UserController {
-
+    private final UserService userService;
     @Autowired
     private JWTUtil jwtUtil;
 
     @Autowired
     private UserRepo _userrepo;
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping(path = "/login")
     public String login() {
