@@ -4,7 +4,9 @@ import {
   MaterialReactTable,
   useMaterialReactTable,
 } from 'material-react-table';
+import {  Button } from '@mui/material';
 
+import handleRedirect from '../HandleFunction/handleRedirect';
 //nested data is ok, see accessorKeys in ColumnDef below
 const data = [
   {
@@ -58,8 +60,8 @@ const data = [
 ];
 
 const Product = () => {
-  const navigate = useNavigate();
-
+ 
+  const {addProduct,addPromotion}= handleRedirect();
   //should be memoized or stable
   const columns = useMemo(
     () => [
@@ -107,14 +109,14 @@ const Product = () => {
     data, //data must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
   });
 
-  const handleAdd = () => {
-    navigate('/add-product'); // replace with your actual route
-  };
-
   return (
     <div>
       <MaterialReactTable table={table} />
-      <button onClick={handleAdd}>Add</button>
+      <Button 
+       variant="contained"
+       color="primary"
+       style={{ marginTop: '16px' }}
+      onClick={addProduct}>Add Product</Button>
     </div>
   );
 };
