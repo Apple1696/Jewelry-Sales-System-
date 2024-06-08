@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class JewelryItem extends Model
+{
+    use HasFactory;
+
+    protected $table = "jewelry_items";
+
+    protected $fillable = [
+        "name",
+        "image",
+        "gold_weight",
+        "category_id",
+        "status"
+    ];
+
+    public function gems() {
+        return $this->belongsToMany(Gem::class, "gems_jewelry_items", "jewelry_id", "gem_id");
+    }
+}
