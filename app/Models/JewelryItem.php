@@ -22,4 +22,8 @@ class JewelryItem extends Model
     public function gems() {
         return $this->belongsToMany(Gem::class, "gems_jewelry_items", "jewelry_id", "gem_id");
     }
+
+    public function category() {
+        return $this->belongsTo(Category::class, 'category_id', 'id');
+    }
 }

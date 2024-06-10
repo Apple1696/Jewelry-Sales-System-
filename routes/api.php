@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\JewelryItemcController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,3 +22,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/login', [AuthController::class, 'login']);
+
+Route::get('/items', [JewelryItemcController::class, 'index']);
+
+Route::get('/items/statistic-by-category', [JewelryItemcController::class, 'statistic']);
+
+Route::get('/items/{id}', [JewelryItemcController::class, 'show']);
+
+Route::post('/items/{id}', [JewelryItemcController::class, 'update']);
+
