@@ -9,6 +9,7 @@ import AddProduct from '../pages/AddProduct';
 import Rebuy from './../pages/Rebuy';
 import Sell from './../pages/Sell/Sell';
 import PickPromotion from '../pages/Sell/PickPromotion';
+import Login from './../Login';
 
 const AllRoutes = () => {
   return (
@@ -16,6 +17,7 @@ const AllRoutes = () => {
       <Sidebar>
         <Routes>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/sell" element={<Sell />} />
           <Route path="/pick-promotion" element={<PickPromotion />} />

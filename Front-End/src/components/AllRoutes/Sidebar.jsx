@@ -23,7 +23,7 @@ const Sidebar = ({ children }) => {
   const handleLogoutConfirm = () => {
     // Add your logout logic here, e.g. calling an API to log out the user
     // For now, we'll just redirect to the login page
-    window.location.href = '/Login';
+    window.location.href = '/login';
   };
   const handleLogoutCancel = () => {
     setShowLogoutModal(false);
