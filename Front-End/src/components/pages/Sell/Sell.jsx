@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import CustomTable from '../../Designs/CustomTable';
 import handleRedirect from './../../HandleFunction/handleRedirect';
+import { TextField, Button, Box } from '@mui/material';
 
 const Sell = () => {
   const [showCart, setShowCart] = useState(false);
@@ -12,7 +13,8 @@ const Sell = () => {
   const [productName, setProductName] = useState('');
   const [productId, setProductId] = useState('');
   const [pricePerUnit, setPricePerUnit] = useState(0);
-  const{pickPromotion}=handleRedirect();
+  const { pickPromotion } = handleRedirect();
+
   const handleSave = () => {
     setShowCart(true);
   };
@@ -60,50 +62,93 @@ const Sell = () => {
   const totalAmount = cartItems.reduce((acc, item) => acc + item.totalCost, 0);
 
   return (
-    <div>
+    <Box p={2}>
       <h1>Customer and Cart details</h1>
-      <div>
-        <label>Enter Customer Name or Contact Info:</label>
-        <br/>
-        <input type="text" />
-        <button onClick={handleSave}>Inspect</button>
-      </div>
-      <button>Add new customer</button>
+      <Box mb={2}>
+        <TextField
+          label="Enter Customer Name or Contact Info"
+          margin="normal"
+          variant="outlined"
+          fullWidth
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSave}
+          style={{ marginTop: '16px' }}
+        >
+          Inspect
+        </Button>
+        <Button
+          variant="contained"
+          style={{ marginTop: '16px', marginLeft: '16px' }}
+        >
+          Add new customer
+        </Button>
+      </Box>
       {showCart && (
-        <div>
+        <Box mb={2}>
           <h2>Add items into cart</h2>
-          <label>Product Name:</label>
-          <input
-            type="text"
+          <TextField
+            label="Product Name"
             value={productName}
             onChange={(e) => setProductName(e.target.value)}
+            margin="normal"
+            variant="outlined"
+            fullWidth
           />
-          <br />
-          <label>Product ID:</label>
-          <input
-            type="text"
+          <TextField
+            label="Product ID"
             value={productId}
             onChange={(e) => setProductId(e.target.value)}
+            margin="normal"
+            variant="outlined"
+            fullWidth
           />
-          <br />
-          <label>Price Per Unit:</label>
-          <input
+          <TextField
+            label="Price Per Unit"
             type="number"
             value={pricePerUnit}
             onChange={(e) => setPricePerUnit(parseFloat(e.target.value))}
+            margin="normal"
+            variant="outlined"
+            fullWidth
           />
-          <br />
-          <button onClick={handleAddItem}>Add item</button>
-
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleAddItem}
+            style={{ marginTop: '16px' }}
+          >
+            Add item
+          </Button>
+        </Box>
+      )}
+      {showCart && (
+        <Box>
           <h3>Cart Details</h3>
+          <br/>
           <CustomTable columns={columns} data={cartItems} />
           <br />
           <h4>Total Amount: {totalAmount.toFixed(2)}</h4>
-          <button onClick={pickPromotion}>Promotion</button>
-          <button>Next</button>
-        </div>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={pickPromotion}
+            style={{ marginTop: '16px', marginRight: '16px' }}
+          >
+            Promotion
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ marginTop: '16px' }}
+          >
+            Next
+          </Button>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 };
 
