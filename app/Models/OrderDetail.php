@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class OrderDetail extends Model
 {
     use HasFactory;
-    
+    protected $table = 'order_details';  // Ensure this matches your table name
     protected $primaryKey = 'order_detail_id';
 
     protected $fillable = [
@@ -18,7 +18,7 @@ class OrderDetail extends Model
 
     public function orders()
     {
-        return $this->belongsTo(Order::class, 'order_id', 'order_id');
+        return $this->belongsTo(Orders::class, 'order_id', 'order_id');
     }
     
 }

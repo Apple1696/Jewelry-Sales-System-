@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\JewelryItemcController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,3 +32,8 @@ Route::get('/items/{id}', [JewelryItemcController::class, 'show']);
 
 Route::post('/items/{id}', [JewelryItemcController::class, 'update']);
 
+//Order
+Route::get('/orders', [OrderController::class,'index']);
+Route::post('/orders', [OrderController::class,'store']);
+Route::put('/orders/{id}', [OrderController::class,'update']);
+Route::delete('/orders/{id}', [OrderController::class,'destroy']);

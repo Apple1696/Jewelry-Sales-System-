@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Order extends Model
+class Orders extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'order_id';
+    protected $table = 'orders';
+    protected $primaryKey = 'id';
     protected $fillable = [
         'order_type',
         'order_date',
@@ -18,7 +19,7 @@ class Order extends Model
 
     public function orderDetails()
     {
-        return $this->hasMany(OrderDetail::class, 'order_id', 'order_id');
+        return $this->hasMany(OrderDetail::class, 'order_id', 'id');
     }
     public function user(){
         return $this->belongsTo(User::class);
