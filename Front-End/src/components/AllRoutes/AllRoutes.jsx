@@ -17,9 +17,9 @@ const AllRoutes = () => {
       <Sidebar>
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/sell" element={<Sell />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/pick-promotion" element={<PickPromotion />} />
           <Route path="/order-report" element={<OrderReport />} />
           <Route path="/promotion" element={<Promotion />} />

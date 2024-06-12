@@ -11,7 +11,7 @@ import { BsCurrencyDollar } from "react-icons/bs";
 import { NavLink } from 'react-router-dom';
 import { IoMdExit } from "react-icons/io";
 import './AllRoutes.css'
-import Login from './../Login';
+import handleRedirect from './../HandleFunction/handleRedirect';
 
 const Sidebar = ({ children }) => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -20,11 +20,13 @@ const Sidebar = ({ children }) => {
     setShowLogoutModal(true);
     setIsBlurred(true);
   };
-  const handleLogoutConfirm = () => {
-    // Add your logout logic here, e.g. calling an API to log out the user
-    // For now, we'll just redirect to the login page
-    window.location.href = '/login';
-  };
+  // const handleLogoutConfirm = () => {
+  //   // Add your logout logic here, e.g. calling an API to log out the user
+  //   // For now, we'll just redirect to the login page
+  //   window.location.href = '/login';
+  // };
+  const{handleLogoutConfirm} = handleRedirect();
+
   const handleLogoutCancel = () => {
     setShowLogoutModal(false);
     setIsBlurred(false);

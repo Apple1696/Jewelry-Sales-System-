@@ -6,10 +6,12 @@ export default function handleRedirect() {
     const addProduct=()=> navigate('/add-product')
     const addPromotion=()=> navigate('/add-promotion')
     const pickPromotion=()=>navigate('/pick-promotion')
+    const handleLogoutConfirm=()=>navigate('/login')
     return{
         addProduct,
         addPromotion,
         pickPromotion,
+        handleLogoutConfirm
     }
  
 }
