@@ -3,6 +3,7 @@ import './Login.css';
 import login_ic from '../assets/Login.jpg';
 import { Helmet } from 'react-helmet';
 import axios from 'axios';
+import handleRedirect from './HandleFunction/handleRedirect';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -12,9 +13,9 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/login', { username, password });
+      const response = await axios.post('https://666aa8737013419182d04e24.mockapi.io/api/User', { username, password });
       // Login successful, redirect to dashboard page
-      window.location.href = 'AllRoutes.jsx';
+      window.location.href = '/dashboard';
     } catch (error) {
       // API returned an error, display error message
       setErrorMessage('Error logging in. Please try again.');
