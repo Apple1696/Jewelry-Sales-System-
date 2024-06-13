@@ -65,10 +65,10 @@ const Sidebar = ({ children }) => {
   ]
   return (
     <div className="container">
-      <div style={{ width: isOpen ? "300px" : "50px" }} className={`sidebar ${isBlurred ? 'blurred' : ''}`}>
+      <div style={{ width: isOpen ? "220px" : "50px" }} className={`sidebar ${isBlurred ? 'blurred' : ''}`}>
         <div className="top_section">
           <h1 style={{ display: isOpen ? "block" : "none" }} className="logo">Logo</h1>
-          <div style={{ marginLeft: isOpen ? "150px" : "0px" }} className="bars">
+          <div style={{ marginLeft: isOpen ? "90px" : "0px" }} className="bars">
             <FaBars onClick={toggle} />
           </div>
         </div>
