@@ -4,7 +4,8 @@ import { Button, Stack, IconButton } from '@mui/material';
 import { FaEdit, FaTrash } from 'react-icons/fa'; // Import icons from react-icons
 import { Modal, Input } from 'antd'; // Import Ant Design components
 
-import handleRedirect from '../HandleFunction/handleRedirect';
+import handleRedirect from './../../HandleFunction/handleRedirect';
+import Edit from './Edit';
 
 const initialData = [
   {
@@ -62,27 +63,13 @@ const initialData = [
 const Product = () => {
   const { addProduct } = handleRedirect();
   const [data, setData] = useState(initialData);
+  const [showLogoutModal] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentRow, setCurrentRow] = useState(null);
-  const [price, setPrice] = useState('');
-  const [quantity, setQuantity] = useState('');
 
   const handleEdit = (row) => {
     setCurrentRow(row);
-    setPrice(row.original.city); // Assuming 'city' is used as 'Price'
-    setQuantity(row.original.state); // Assuming 'state' is used as 'Quantity'
     setIsModalVisible(true);
-  };
-
-  const handleEditSave = () => {
-    setData((prevData) =>
-      prevData.map((item) =>
-        item.id === currentRow.original.id
-          ? { ...item, city: price, state: quantity }
-          : item
-      )
-    );
-    setIsModalVisible(false);
   };
 
   const handleDelete = (row) => {
@@ -162,29 +149,18 @@ const Product = () => {
         </Button>
       </div>
 
-      <Modal
-        title="Edit Item"
-        visible={isModalVisible}
-        onOk={handleEditSave}
-        onCancel={() => setIsModalVisible(false)}
-      >
-        <div>
-          <label>Price: </label>
-          <Input
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            placeholder="Enter new price"
-          />
-        </div>
-        <div>
-          <label>Quantity: </label>
-          <Input
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
-            placeholder="Enter new quantity"
-          />
-        </div>
-      </Modal>
+      <Edit
+        isVisible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        rowData={currentRow ? currentRow.original : null}
+        updateData={(updatedRow) => {
+          setData((prevData) =>
+            prevData.map((item) =>
+              item.id === updatedRow.id ? { ...item, ...updatedRow } : item
+            )
+          );
+        }}
+      />
     </div>
   );
 };
