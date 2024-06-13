@@ -1,3 +1,4 @@
+// Sell.jsx
 import React, { useState, useMemo } from 'react';
 import CustomTable from '../../Designs/CustomTable';
 import handleRedirect from './../../HandleFunction/handleRedirect';
@@ -31,6 +32,8 @@ const Sell = () => {
     setProductName('');
     setProductId('');
     setPricePerUnit(0);
+    const newTotalAmount = cartItems.reduce((acc, item) => acc + item.totalCost, 0) + totalCost;
+    setTotalAmount(newTotalAmount);
   };
 
   const columns = useMemo(
@@ -59,7 +62,7 @@ const Sell = () => {
     []
   );
 
-  const totalAmount = cartItems.reduce((acc, item) => acc + item.totalCost, 0);
+  const [totalAmount, setTotalAmount] = useState(cartItems.reduce((acc, item) => acc + item.totalCost, 0));
 
   return (
     <Box p={2}>
@@ -127,7 +130,7 @@ const Sell = () => {
       {showCart && (
         <Box>
           <h3>Cart Details</h3>
-          <br/>
+          <br />
           <CustomTable columns={columns} data={cartItems} />
           <br />
           <h4>Total Amount: {totalAmount.toFixed(2)}</h4>
