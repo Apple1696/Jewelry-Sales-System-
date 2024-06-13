@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Dashboard from './../pages/Dashboard';
 import OrderReport from './../pages/OrderReport';
@@ -12,24 +12,39 @@ import PickPromotion from '../pages/Sell/PickPromotion';
 import Login from './../Login';
 
 const AllRoutes = () => {
+  const location = useLocation();
+
   return (
-    <BrowserRouter>
-      <Sidebar>
+    <div>
+      {location.pathname !== '/login' ? (
+        <Sidebar>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/sell" element={<Sell />} />
+            <Route path="/pick-promotion" element={<PickPromotion />} />
+            <Route path="/order-report" element={<OrderReport />} />
+            <Route path="/promotion" element={<Promotion />} />
+            <Route path="/product" element={<Product />} />
+            <Route path="/add-product" element={<AddProduct />} />
+            <Route path="/rebuy" element={<Rebuy />} />
+          </Routes>
+        </Sidebar>
+      ) : (
         <Routes>
-          <Route path="/" element={<Dashboard />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/sell" element={<Sell />} />
-          <Route path="/pick-promotion" element={<PickPromotion />} />
-          <Route path="/order-report" element={<OrderReport />} />
-          <Route path="/promotion" element={<Promotion />} />
-          <Route path="/product" element={<Product />} />
-          <Route path="/add-product" element={<AddProduct />} />
-          <Route path="/rebuy" element={<Rebuy />} />
         </Routes>
-      </Sidebar>
-    </BrowserRouter>
+      )}
+    </div>
   );
 };
 
-export default AllRoutes;
+const App = () => {
+  return (
+    <BrowserRouter>
+      <AllRoutes />
+    </BrowserRouter>
+  );Y
+};
+
+export default App;

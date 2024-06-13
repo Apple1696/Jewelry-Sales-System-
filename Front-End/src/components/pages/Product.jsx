@@ -1,12 +1,14 @@
 import React, { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
-import { Button } from '@mui/material';
+import { MaterialReactTable } from 'material-react-table';
+import { Button, Stack, IconButton } from '@mui/material';
+import { FaEdit, FaTrash } from 'react-icons/fa'; // Import icons from react-icons
+import { Modal, Input } from 'antd'; // Import Ant Design components
 
 import handleRedirect from '../HandleFunction/handleRedirect';
 
-const data = [
+const initialData = [
   {
+    id: 1,
     name: {
       firstName: 'John',
       lastName: 'Doe',
@@ -16,6 +18,7 @@ const data = [
     state: 'Kentucky',
   },
   {
+    id: 2,
     name: {
       firstName: 'Jane',
       lastName: 'Doe',
@@ -25,6 +28,7 @@ const data = [
     state: 'Ohio',
   },
   {
+    id: 3,
     name: {
       firstName: 'Joe',
       lastName: 'Doe',
@@ -34,6 +38,7 @@ const data = [
     state: 'West Virginia',
   },
   {
+    id: 4,
     name: {
       firstName: 'Kevin',
       lastName: 'Vandy',
@@ -43,6 +48,7 @@ const data = [
     state: 'Nebraska',
   },
   {
+    id: 5,
     name: {
       firstName: 'Joshua',
       lastName: 'Rolluffs',
@@ -51,101 +57,101 @@ const data = [
     city: 'Charleston',
     state: 'South Carolina',
   },
- 
- 
- 
 ];
- // your data array
 
 const Product = () => {
-  const { addProduct, addPromotion } = handleRedirect();
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const { addProduct } = handleRedirect();
+  const [data, setData] = useState(initialData);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [currentRow, setCurrentRow] = useState(null);
+  const [price, setPrice] = useState('');
+  const [quantity, setQuantity] = useState('');
 
-  const handleLogout = () => {
-    setShowLogoutModal(true);
+  const handleEdit = (row) => {
+    setCurrentRow(row);
+    setPrice(row.original.city); // Assuming 'city' is used as 'Price'
+    setQuantity(row.original.state); // Assuming 'state' is used as 'Quantity'
+    setIsModalVisible(true);
   };
 
-  const handleLogoutConfirm = () => {
-    // Add your logout logic here, e.g. calling an API to log out the user
-    // For now, we'll just redirect to the login page
-    window.location.href = '/login';
+  const handleEditSave = () => {
+    setData((prevData) =>
+      prevData.map((item) =>
+        item.id === currentRow.original.id
+          ? { ...item, city: price, state: quantity }
+          : item
+      )
+    );
+    setIsModalVisible(false);
   };
 
-  const handleLogoutCancel = () => {
-    setShowLogoutModal(false);
+  const handleDelete = (row) => {
+    setData((prevData) => prevData.filter((item) => item.id !== row.original.id));
+    console.log("Delete", row.original.id);
+    // Here you can add your API call to delete the item from the server
+    // Example:
+    // fetch(`your-api-endpoint/${row.original.id}`, {
+    //   method: 'DELETE',
+    // })
+    // .then(response => response.json())
+    // .then(data => {
+    //   console.log('Item deleted:', data);
+    // })
+    // .catch(error => {
+    //   console.error('Error deleting item:', error);
+    // });
   };
 
   const columns = useMemo(
     () => [
       {
         accessorKey: 'name.firstName', // access nested data with dot notation
-        header: 'No',
-        size: 150,
-      },
-      {
-        accessorKey: 'name.lastName',
         header: 'ID',
         size: 150,
       },
       {
-        accessorKey: 'address', // normal accessorKey
+        accessorKey: 'name.lastName',
         header: 'Name',
+        size: 150,
+      },
+      {
+        accessorKey: 'address', // normal accessorKey
+        header: 'Category',
         size: 200,
       },
       {
         accessorKey: 'city',
-        header: 'Category',
-        size: 150,
-      },
-      {
-        accessorKey: 'tate',
         header: 'Price',
         size: 150,
       },
       {
-        accessorKey: 'tate',
+        accessorKey: 'state',
         header: 'Quantity',
         size: 150,
+      },
+      {
+        accessorKey: 'action',
+        header: 'Action',
+        size: 150,
+        Cell: ({ row }) => (
+          <Stack direction="row" spacing={1}>
+            <IconButton color="primary" onClick={() => handleEdit(row)}>
+              <FaEdit />
+            </IconButton>
+            <IconButton color="secondary" onClick={() => handleDelete(row)}>
+              <FaTrash />
+            </IconButton>
+          </Stack>
+        ),
       },
     ],
     [],
   );
 
-  const table = useMaterialReactTable({
-    columns,
-    data, // data must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
-  });
-
   return (
     <div>
-      {showLogoutModal? (
-        <div
-          className="logout-modal"
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            zIndex: 1000,
-          }}
-        >
-          <div className="logout-modal-content">
-            <h2>Are you sure you want to log out?</h2>
-            <button onClick={handleLogoutConfirm}>Yes</button>
-            <button onClick={handleLogoutCancel}>Cancel</button>
-          </div>
-        </div>
-      ) : null}
-      <div
-        className="table-container"
-        style={{
-          opacity: showLogoutModal? 0 : 1,
-          transition: 'opacity 0.3s',
-        }}
-      >
-        <MaterialReactTable table={table} />
+      <div className="table-container">
+        <MaterialReactTable columns={columns} data={data} />
         <Button
           variant="contained"
           color="primary"
@@ -155,6 +161,30 @@ const Product = () => {
           Add Product
         </Button>
       </div>
+
+      <Modal
+        title="Edit Item"
+        visible={isModalVisible}
+        onOk={handleEditSave}
+        onCancel={() => setIsModalVisible(false)}
+      >
+        <div>
+          <label>Price: </label>
+          <Input
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            placeholder="Enter new price"
+          />
+        </div>
+        <div>
+          <label>Quantity: </label>
+          <Input
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+            placeholder="Enter new quantity"
+          />
+        </div>
+      </Modal>
     </div>
   );
 };
