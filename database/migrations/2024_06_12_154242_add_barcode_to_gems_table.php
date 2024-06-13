@@ -11,13 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('gems', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->boolean('is_gem_stone')->default(0);
-            $table->unsignedBigInteger('price');
-            $table->integer('barcode');
-            $table->timestamps();
+        Schema::table('gems', function (Blueprint $table) {
+            $table->integer('barcode')->nullable()->after('image');
         });
     }
 
@@ -26,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('gems');
+        Schema::table('gems', function (Blueprint $table) {
+            $table->dropColumn('barcode');
+        });
     }
 };

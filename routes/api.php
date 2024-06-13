@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\JewelryItemcController;
+use App\Http\Controllers\GemsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +19,7 @@ use App\Http\Controllers\JewelryItemcController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
-    
+
 });
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -30,4 +31,6 @@ Route::get('/items/statistic-by-category', [JewelryItemcController::class, 'stat
 Route::get('/items/{id}', [JewelryItemcController::class, 'show']);
 
 Route::post('/items/{id}', [JewelryItemcController::class, 'update']);
+
+Route::get('/gems/search/{barcode}', [GemsController::class, 'search']);
 

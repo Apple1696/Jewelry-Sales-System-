@@ -91,4 +91,5 @@ class JewelryItemcController extends Controller
         }
         return response()->json($productCountByCategory);
     }
+    
 }
