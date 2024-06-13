@@ -1,8 +1,19 @@
-// Sell.jsx
 import React, { useState, useMemo } from 'react';
 import CustomTable from '../../Designs/CustomTable';
 import handleRedirect from './../../HandleFunction/handleRedirect';
-import { TextField, Button, Box } from '@mui/material';
+import { TextField, Button, Box, Typography } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#333',
+    },
+    secondary: {
+      main: '#666',
+    },
+  },
+});
 
 const Sell = () => {
   const [showCart, setShowCart] = useState(false);
@@ -65,93 +76,107 @@ const Sell = () => {
   const [totalAmount, setTotalAmount] = useState(cartItems.reduce((acc, item) => acc + item.totalCost, 0));
 
   return (
-    <Box p={2}>
-      <h1>Customer and Cart details</h1>
-      <Box mb={2}>
-        <TextField
-          label="Enter Customer Name or Contact Info"
-          margin="normal"
-          variant="outlined"
-          fullWidth
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSave}
-          style={{ marginTop: '16px' }}
-        >
-          Inspect
-        </Button>
-        <Button
-          variant="contained"
-          style={{ marginTop: '16px', marginLeft: '16px' }}
-        >
-          Add new customer
-        </Button>
-      </Box>
-      {showCart && (
+    <ThemeProvider theme={theme}>
+      <Box p={2} sx={{ maxWidth: 800, mx: 'auto', py: 4 }}>
+        <Typography variant="h1" gutterBottom>
+          Customer and Cart details
+        </Typography>
         <Box mb={2}>
-          <h2>Add items into cart</h2>
           <TextField
-            label="Product Name"
-            value={productName}
-            onChange={(e) => setProductName(e.target.value)}
+            label="Enter Customer Name or Contact Info"
             margin="normal"
             variant="outlined"
             fullWidth
-          />
-          <TextField
-            label="Product ID"
-            value={productId}
-            onChange={(e) => setProductId(e.target.value)}
-            margin="normal"
-            variant="outlined"
-            fullWidth
-          />
-          <TextField
-            label="Price Per Unit"
-            type="number"
-            value={pricePerUnit}
-            onChange={(e) => setPricePerUnit(parseFloat(e.target.value))}
-            margin="normal"
-            variant="outlined"
-            fullWidth
+            sx={{ mb: 2 }}
           />
           <Button
             variant="contained"
             color="primary"
-            onClick={handleAddItem}
-            style={{ marginTop: '16px' }}
+            onClick={handleSave}
+            sx={{ mr: 2 }}
           >
-            Add item
+            Inspect
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ mr: 2 }}
+          >
+            Add new customer
           </Button>
         </Box>
-      )}
-      {showCart && (
-        <Box>
-          <h3>Cart Details</h3>
-          <br />
-          <CustomTable columns={columns} data={cartItems} />
-          <br />
-          <h4>Total Amount: {totalAmount.toFixed(2)}</h4>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={pickPromotion}
-            style={{ marginTop: '16px', marginRight: '16px' }}
-          >
-            Promotion
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            style={{ marginTop: '16px' }}
-          >
-            Next
-          </Button>
-        </Box>
-      )}
-    </Box>
+        {showCart && (
+          <Box mb={2}>
+            <Typography variant="h2" gutterBottom>
+              Add items into cart
+            </Typography>
+            <TextField
+              label="Product Name"
+              value={productName}
+              onChange={(e) => setProductName(e.target.value)}
+              margin="normal"
+              variant="outlined"
+              fullWidth
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              label="Product ID"
+              value={productId}
+              onChange={(e) => setProductId(e.target.value)}
+              margin="normal"
+              variant="outlined"
+              fullWidth
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              label="Price Per Unit"
+              type="number"
+              value={pricePerUnit}
+              onChange={(e) => setPricePerUnit(parseFloat(e.target.value))}
+              margin="normal"
+              variant="outlined"
+              fullWidth
+              sx={{ mb: 2 }}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddItem}
+              sx={{ mr: 2 }}
+            >
+              Add item
+            </Button>
+          </Box>
+        )}
+        {showCart && (
+          <Box>
+            <Typography variant="h3" gutterBottom>
+              Cart Details
+            </Typography>
+            <br />
+            <CustomTable columns={columns} data={cartItems} />
+<br />
+            <Typography variant="h4" gutterBottom>
+              Total Amount: {totalAmount.toFixed(2)}
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={pickPromotion}
+              sx={{ mr: 2 }}
+            >
+              Promotion
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ mr: 2 }}
+            >
+              Next
+            </Button>
+          </Box>
+        )}
+      </Box>
+    </ThemeProvider>
   );
 };
 
