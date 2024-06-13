@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Sell from './../pages/Sell/Sell';
-import PickPromotion from '../pages/Sell/PickPromotion';
 import Login from './../Login';
 import Product from './../pages/Product/Product';
 import AddProduct from './../pages/Product/AddProduct';
@@ -10,6 +9,7 @@ import Dashboard from './../pages/Dashboard/Dashboard';
 import Promotion from './../pages/Promotion/Promotion';
 import Rebuy from './../pages/Rebuy/Rebuy';
 import OrderReport from './../pages/OrderReport/OrderReport';
+import PickPromotion from './../pages/Sell/PickPromotion';
 
 const AllRoutes = () => {
   const location = useLocation();
