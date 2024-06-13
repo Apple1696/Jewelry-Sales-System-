@@ -63,14 +63,4 @@ class GemsController extends Controller
     {
         //
     }
-    public function search(int $barcode)
-    {
-        $gem = Gem::where('barcode', $barcode)->first();
-
-        if (!$gem) {
-            return response()->json(['message' => 'Gem not found'], 404);
-        }
-
-        return response()->json($gem);
-    }
 }

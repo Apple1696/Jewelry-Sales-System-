@@ -91,5 +91,13 @@ class JewelryItemcController extends Controller
         }
         return response()->json($productCountByCategory);
     }
+    public function search(int $barcode)
+    {
+        $items = JewelryItem::where('barcode', $barcode)->first();
+        if(!$items){
+            return response()->json(['message' => 'Jewelry item not found'], 404);
+        }
+        return response()->json($items);
+    }
     
 }

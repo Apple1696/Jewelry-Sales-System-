@@ -4,7 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\JewelryItemcController;
-use App\Http\Controllers\GemsController;
+use App\Http\Controllers\CustomerController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -32,5 +33,11 @@ Route::get('/items/{id}', [JewelryItemcController::class, 'show']);
 
 Route::post('/items/{id}', [JewelryItemcController::class, 'update']);
 
-Route::get('/gems/search/{barcode}', [GemsController::class, 'search']);
+Route::get('/items/search/{barcode}', [JewelryItemcController::class, 'search']);
 
+//Customers Route
+Route::get('/customer', [CustomerController::class, 'index']);
+
+Route::post('/customer', [CustomerController::class, 'store']);
+
+Route::get('/customer/search', [CustomerController::class, 'searchByPhone']);
