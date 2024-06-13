@@ -14,9 +14,12 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('total_price');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('Cascade');
+            $table->decimal('total_price', 10, 2); // Adjusted for currency precision
+            $table->string('order_type'); // Ensure it matches model's fillable fields
             $table->timestamps();
+
+            // Foreign key constraint
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
