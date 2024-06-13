@@ -35,7 +35,7 @@ const Product = () => {
     setData((prevData) => prevData.filter((item) => item.id !== row.original.id));
     console.log("Delete", row.original.id);
     // API call to delete the item
-    axios.delete(`https://your-api-endpoint.com/products/${row.original.id}`)
+    axios.delete(`https://666aa8737013419182d04e24.mockapi.io/api/Products${row.original.id}`)
       .then(response => {
         console.log('Item deleted:', response.data);
       })

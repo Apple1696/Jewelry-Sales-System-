@@ -20,6 +20,10 @@ const Sell = () => {
   };
 
   const handleAddItem = () => {
+    if (!productId || !productName || !pricePerUnit) {
+      alert('All fields are required');
+      return;
+    }
     const totalCost = pricePerUnit; // Assuming quantity is 1 for simplicity
     const newItem = {
       productId,
