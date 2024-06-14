@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->string('type');
-            $table->unsignedBigInteger('order_id');
-            $table->date('expire_date');
-            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');       
+            $table->foreignId('order_id')->constrained('orders')->onDelete('cascade'); 
+            $table->dateTime('expire_date');   
+            $table->timestamps();
         });
     }
 

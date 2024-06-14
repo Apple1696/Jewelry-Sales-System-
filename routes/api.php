@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\JewelryItemcController;
 use App\Http\Controllers\OrderController;
 
@@ -37,3 +38,10 @@ Route::get('/orders', [OrderController::class,'index']);
 Route::post('/orders', [OrderController::class,'store']);
 Route::put('/orders/{id}', [OrderController::class,'update']);
 Route::delete('/orders/{id}', [OrderController::class,'destroy']);
+
+//Invoice
+Route::get('/invoices', [InvoiceController::class,'index']);
+Route::get('/invoices/{id}', [InvoiceController::class,'show']);
+Route::post('/invoices', [InvoiceController::class,'create']);
+Route::put('/invoices/{id}', [InvoiceController::class,'update']);
+Route::delete('/invoices/{id}', [InvoiceController::class,'destroy']);

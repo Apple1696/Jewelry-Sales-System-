@@ -12,13 +12,15 @@ class Invoice extends Model
     protected $table = "invoices";
 
     protected $primaryKey = "id";
+
     protected $fillable = [
         'order_id',
         'type',
         'expire_date'
     ];
 
-    public function order(){
-        return $this->belongsTo(Orders::class);
+    public function order()
+    {
+        return $this->belongsTo(Orders::class, 'order_id');
     }
 }
