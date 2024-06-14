@@ -1,87 +1,127 @@
-import React, { useState } from 'react';
-import { TextField, Button, Box } from '@mui/material';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Box, IconButton, Stack } from '@mui/material';
+import { FaEdit, FaTrash } from 'react-icons/fa';
+import axios from 'axios';
+import CustomTable from './../../Designs/CustomTable';
+import AddPromotion from './AddPromotion';
+import EditPromotion from './EditPromotion'; // Assuming you have an Edit component
 
-const AddPromotion = ({ addPromotion }) => {
-  // State to hold the input values
-  const [promotionId, setPromotionId] = useState('');
-  const [promotionName, setPromotionName] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+const Promotion = () => {
+  // State to hold the promotions
+  const [promotions, setPromotions] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [currentRow, setCurrentRow] = useState(null);
+
+  // Fetch data from the API
+  useEffect(() => {
+    const fetchPromotions = async () => {
+      try {
+        const response = await axios.get('https://666aa8737013419182d04e24.mockapi.io/api/Promotion');
+        setPromotions(response.data);
+      } catch (error) {
+        console.error('Error fetching promotions:', error);
+      }
+    };
+
+    fetchPromotions();
+  }, []);
 
   // Handler for adding a promotion
-  const handleAddPromotion = () => {
-    if (!promotionId || !promotionName || !startDate || !endDate) {
-      alert('All fields are required');
-      return;
-    }
-    const newPromotion = {
-      id: promotionId,
-      name: promotionName,
-      description: 'New Promotion Description', // Description is fixed for this example
-      startDate: startDate,
-      endDate: endDate,
-      status: 'Upcoming', // Status is fixed for this example
-    };
-    addPromotion(newPromotion);
-    // Clear the input fields
-    setPromotionId('');
-    setPromotionName('');
-    setStartDate('');
-    setEndDate('');
+  const addPromotion = (newPromotion) => {
+    setPromotions([...promotions, newPromotion]);
   };
 
+  const handleEdit = (row) => {
+    setCurrentRow(row);
+    setIsModalVisible(true);
+  };
+
+  const handleDelete = (row) => {
+    setPromotions((prevPromotions) => prevPromotions.filter((item) => item.id !== row.original.id));
+    console.log("Delete", row.original.id);
+    // API call to delete the item
+    axios.delete(`https://666aa8737013419182d04e24.mockapi.io/api/Promotion/${row.original.id}`)
+      .then(response => {
+        console.log('Item deleted:', response.data);
+      })
+      .catch(error => {
+        console.error('Error deleting item:', error);
+      });
+  };
+
+  // Define the columns for the table
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: 'id',
+        header: 'ID',
+        size: 150,
+      },
+      {
+        accessorKey: 'PromotionName',
+        header: 'Promotion Name',
+        size: 150,
+      },
+      {
+        accessorKey: 'Description',
+        header: 'Description',
+        size: 150,
+      },
+      {
+        accessorKey: 'StartDate',
+        header: 'Start Date',
+        size: 150,
+      },
+      {
+        accessorKey: 'EndDate',
+        header: 'End Date',
+        size: 150,
+      },
+      {
+        accessorKey: 'Status',
+        header: 'Status',
+        size: 150,
+      },
+      {
+        accessorKey: 'action',
+        header: 'Action',
+        size: 150,
+        Cell: ({ row }) => (
+          <Stack direction="row" spacing={1}>
+            <IconButton color="primary" onClick={() => handleEdit(row)}>
+              <FaEdit />
+            </IconButton>
+            <IconButton color="secondary" onClick={() => handleDelete(row)}>
+              <FaTrash />
+            </IconButton>
+          </Stack>
+        ),
+      },
+    ],
+    [],
+  );
+
   return (
-    <Box mb={2}>
-      <TextField
-        label="Promotion ID"
-        value={promotionId}
-        onChange={(e) => setPromotionId(e.target.value)}
-        margin="normal"
-        variant="outlined"
-        fullWidth
-      />
-      <TextField
-        label="Promotion Name"
-        value={promotionName}
-        onChange={(e) => setPromotionName(e.target.value)}
-        margin="normal"
-        variant="outlined"
-        fullWidth
-      />
-      <TextField
-        label="Start Date"
-        type="date"
-        value={startDate}
-        onChange={(e) => setStartDate(e.target.value)}
-        margin="normal"
-        variant="outlined"
-        fullWidth
-        InputLabelProps={{
-          shrink: true,
+    <Box p={2}>
+      <AddPromotion addPromotion={addPromotion} />
+      <Box height={400}>
+        <CustomTable columns={columns} data={promotions} />
+      </Box>
+
+      <EditPromotion
+        isVisible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        rowData={currentRow ? currentRow.original : null}
+        updateData={(updatedRow) => {
+          setPromotions((prevPromotions) =>
+            prevPromotions.map((item) =>
+              item.id === updatedRow.id ? { ...item, ...updatedRow } : item
+            )
+          );
         }}
       />
-      <TextField
-        label="End Date"
-        type="date"
-        value={endDate}
-        onChange={(e) => setEndDate(e.target.value)}
-        margin="normal"
-        variant="outlined"
-        fullWidth
-        InputLabelProps={{
-          shrink: true,
-        }}
-      />
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleAddPromotion}
-        style={{ marginTop: '16px' }}
-      >
-        Add Promotion
-      </Button>
     </Box>
   );
 };
 
-export default AddPromotion;
+export default Promotion;

@@ -32,6 +32,10 @@ const Sell = () => {
   };
 
   const handleAddItem = () => {
+    if (!productId || !productName || !pricePerUnit) {
+      alert('All fields are required');
+      return;
+    }
     const totalCost = pricePerUnit; // Assuming quantity is 1 for simplicity
     const newItem = {
       productId,
@@ -43,8 +47,6 @@ const Sell = () => {
     setProductName('');
     setProductId('');
     setPricePerUnit(0);
-    const newTotalAmount = cartItems.reduce((acc, item) => acc + item.totalCost, 0) + totalCost;
-    setTotalAmount(newTotalAmount);
   };
 
   const columns = useMemo(
