@@ -6,12 +6,11 @@ import { Modal, Input } from 'antd';
 import axios from 'axios'; // Import Axios
 
 import handleRedirect from './../../HandleFunction/handleRedirect';
-import Edit from './Edit';
+import EditProduct from './EditProduct';
 
 const Product = () => {
   const { addProduct } = handleRedirect();
   const [data, setData] = useState([]);
-  const [showLogoutModal] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentRow, setCurrentRow] = useState(null);
 
@@ -35,7 +34,7 @@ const Product = () => {
     setData((prevData) => prevData.filter((item) => item.id !== row.original.id));
     console.log("Delete", row.original.id);
     // API call to delete the item
-    axios.delete(`https://your-api-endpoint.com/products/${row.original.id}`)
+    axios.delete(`https://666aa8737013419182d04e24.mockapi.io/api/Products${row.original.id}`)
       .then(response => {
         console.log('Item deleted:', response.data);
       })
@@ -59,7 +58,7 @@ const Product = () => {
       {
         accessorKey: 'category', // Adjusted to match actual API response
         header: 'Category',
-        size: 200,
+        size: 150,
       },
       {
         accessorKey: 'price', // Adjusted to match actual API response
@@ -104,7 +103,7 @@ const Product = () => {
         </Button>
       </div>
 
-      <Edit
+      <EditProduct
         isVisible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
         rowData={currentRow ? currentRow.original : null}

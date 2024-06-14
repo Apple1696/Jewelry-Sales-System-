@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Input, Button } from 'antd';
 
-const Edit = ({ isVisible, onClose, rowData, updateData }) => {
+const EditPromotion = ({ isVisible, onClose, rowData, updateData }) => {
   const [price, setPrice] = useState('');
   const [quantity, setQuantity] = useState('');
 
@@ -55,4 +55,4 @@ const Edit = ({ isVisible, onClose, rowData, updateData }) => {
   );
 };
 
-export default Edit;
+export default EditPromotion;
