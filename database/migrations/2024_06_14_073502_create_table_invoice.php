@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('table_invoice', function (Blueprint $table) {
+        Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->string('type');
             $table->unsignedBigInteger('order_id');
-            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
-            $table->timestamps();
+            $table->date('expire_date');
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');       
         });
     }
 
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('table_invoice');
+        Schema::dropIfExists('invoices');
     }
 };

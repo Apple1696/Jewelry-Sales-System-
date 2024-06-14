@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Invoice;
 use App\Models\OrderDetail;
 use App\Models\Orders;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller{
@@ -39,7 +41,12 @@ class OrderController extends Controller{
             ]);
         }
         
-    
+        Invoice::create([
+            'order_id'=> $orderId,
+            'type' => $validatedData['order_type'],
+            'expire_date' => Carbon::now()->addMonth(12),
+        ]);
+
         // Trả về phản hồi JSON
         return response()->json($order->load('orderDetails'), 201);
     }

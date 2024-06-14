@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Invoice;
+use Carbon\Carbon;
 
 class InvoiceController extends Controller
 {
@@ -18,33 +19,20 @@ class InvoiceController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $this->validate($request, [
+            'order_id' => 'require|integer|exists:orders,id',
+            'type' => 'require|string',
+            'expire_date' => Carbon::now()->addMonth(12),
+        ]);
+        $invoice = Invoice::create($request->all());
+        return response()->json($invoice);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         return response()->json(Invoice::find($id), 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
     }
 
     /**
@@ -52,29 +40,27 @@ class InvoiceController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $item = Invoice::find($id);
-        if (!empty($item)) {
-            $item->update([ 
-                'name' => $request->name,
-                'image' => $request->image,
-                'gold_weight' => $request->gold_weight,
-                'category_id' => $request->category_id,
-                'status' => $request->status
-            ]);
-            return response()->json($item);
-        } else {
-            return response()->json([], 400);
-        }
+        $this->validate($request, [
+            'order_id' => 'require|integer|exists:orders,id',
+            'type' => 'require|string',
+        ]);
+        $invoice = Invoice::find($id);
 
+        if ($invoice == null) {
+            return response()->json("not found any invoice", 404);
+        } else {
+            $invoice->update($request->all());
+            return response()->json(Invoice::find($id), 200);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(int $id)
     {
-        //
+        $invoice = Invoice::find($id);
+        $invoice->delete();
+        return response()->json("delete success", 200);
     }
-
-    
 }
