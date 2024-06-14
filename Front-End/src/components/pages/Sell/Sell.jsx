@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import axios from 'axios';
 import CustomTable from '../../Designs/CustomTable';
 import handleRedirect from './../../HandleFunction/handleRedirect';
 import { TextField, Button, Box, Typography } from '@mui/material';
@@ -17,34 +18,54 @@ const theme = createTheme({
 
 const Sell = () => {
   const [showCart, setShowCart] = useState(false);
-  const [cartItems, setCartItems] = useState([
-    { productId: 'P001', productName: 'Product 1', pricePerUnit: 100, totalCost: 100 },
-    { productId: 'P002', productName: 'Product 2', pricePerUnit: 200, totalCost: 200 },
-    { productId: 'P003', productName: 'Product 3', pricePerUnit: 150, totalCost: 150 },
-  ]);
+  const [cartItems, setCartItems] = useState([]);
   const [productName, setProductName] = useState('');
   const [productId, setProductId] = useState('');
   const [pricePerUnit, setPricePerUnit] = useState(0);
   const { pickPromotion } = handleRedirect();
+  const [totalAmount, setTotalAmount] = useState(0);
+
+  useEffect(() => {
+    axios.get('https://666aa8737013419182d04e24.mockapi.io/api/Products')
+      .then(response => {
+        setCartItems(response.data);
+        const total = response.data.reduce((acc, item) => acc + item.totalCost, 0);
+        setTotalAmount(total);
+      })
+      .catch(error => {
+        console.error('Error fetching the products:', error);
+      });
+  }, []);
 
   const handleSave = () => {
     setShowCart(true);
   };
 
   const handleAddItem = () => {
-    const totalCost = pricePerUnit; // Assuming quantity is 1 for simplicity
+    if (!productId || !productName || !pricePerUnit) {
+      alert('All fields are required');
+      return;
+    }
+
     const newItem = {
       productId,
       productName,
       pricePerUnit,
-      totalCost,
+      totalCost: pricePerUnit, // Assuming quantity is 1 for simplicity
     };
-    setCartItems([...cartItems, newItem]);
-    setProductName('');
-    setProductId('');
-    setPricePerUnit(0);
-    const newTotalAmount = cartItems.reduce((acc, item) => acc + item.totalCost, 0) + totalCost;
-    setTotalAmount(newTotalAmount);
+
+    axios.post('https://666aa8737013419182d04e24.mockapi.io/api/Products', newItem)
+      .then(response => {
+        const updatedItems = [...cartItems, response.data];
+        setCartItems(updatedItems);
+        setTotalAmount(updatedItems.reduce((acc, item) => acc + item.totalCost, 0));
+        setProductName('');
+        setProductId('');
+        setPricePerUnit(0);
+      })
+      .catch(error => {
+        console.error('Error adding the product:', error);
+      });
   };
 
   const columns = useMemo(
@@ -72,8 +93,6 @@ const Sell = () => {
     ],
     []
   );
-
-  const [totalAmount, setTotalAmount] = useState(cartItems.reduce((acc, item) => acc + item.totalCost, 0));
 
   return (
     <ThemeProvider theme={theme}>
@@ -154,7 +173,7 @@ const Sell = () => {
             </Typography>
             <br />
             <CustomTable columns={columns} data={cartItems} />
-<br />
+            <br />
             <Typography variant="h4" gutterBottom>
               Total Amount: {totalAmount.toFixed(2)}
             </Typography>
