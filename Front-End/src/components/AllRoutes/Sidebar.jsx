@@ -20,12 +20,7 @@ const Sidebar = ({ children }) => {
     setShowLogoutModal(true);
     setIsBlurred(true);
   };
-  // const handleLogoutConfirm = () => {
-  //   // Add your logout logic here, e.g. calling an API to log out the user
-  //   // For now, we'll just redirect to the login page
-  //   window.location.href = '/login';
-  // };
-  const{handleLogoutConfirm} = handleRedirect();
+  const { handleLogoutConfirm } = handleRedirect();
 
   const handleLogoutCancel = () => {
     setShowLogoutModal(false);
@@ -67,10 +62,10 @@ const Sidebar = ({ children }) => {
   ]
   return (
     <div className="container">
-      <div style={{ width: isOpen ? "220px" : "50px" }} className={`sidebar ${isBlurred ? 'blurred' : ''}`}>
+      <div style={{ width: isOpen? "220px" : "50px" }} className={`sidebar ${isBlurred? 'blurred' : ''}`}>
         <div className="top_section">
-          <h1 style={{ display: isOpen ? "block" : "none" }} className="logo">Logo</h1>
-          <div style={{ marginLeft: isOpen ? "90px" : "0px" }} className="bars">
+          <h1 style={{ display: isOpen? "block" : "none" }} className="logo">Logo</h1>
+          <div style={{ marginLeft: isOpen? "90px" : "0px" }} className="bars">
             <FaBars onClick={toggle} />
           </div>
         </div>
@@ -78,16 +73,16 @@ const Sidebar = ({ children }) => {
           menuItem.map((item, index) => (
             <NavLink to={item.path} key={index} className="link" activeClassName="active">
               <div className="icon">{item.icon}</div>
-              <div style={{ display: isOpen ? "block" : "none" }} className="link_text">{item.name}</div>
+              <div style={{ display: isOpen? "block" : "none" }} className="link_text">{item.name}</div>
             </NavLink>
           ))
         }
         <div className="link" onClick={handleLogout}>
           <div className="icon"><IoMdExit /></div>
-          <div style={{ display: isOpen ? "block" : "none" }} className="link_text">Logout</div>
+          <div style={{ display: isOpen? "block" : "none" }} className="link_text">Logout</div>
         </div>
       </div>
-      <main style={{ filter: isBlurred ? 'blur(5px)' : 'none' }}>{children}</main>
+      <main style={{ marginLeft: isOpen? "220px" : "50px", transition: "margin 0.5s" }}>{children}</main>
       {
         showLogoutModal && (
           <div className="logout-modal">
