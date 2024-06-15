@@ -4,7 +4,6 @@ import Sidebar from './Sidebar';
 import Sell from './../pages/Sell/Sell';
 import Login from './../Login';
 import Product from './../pages/Product/Product';
-import AddProduct from './../pages/Product/AddProduct';
 import Dashboard from './../pages/Dashboard/Dashboard';
 import Promotion from './../pages/Promotion/Promotion';
 import Rebuy from './../pages/Rebuy/Rebuy';
@@ -28,7 +27,6 @@ const AllRoutes = () => {
             <Route path="/order-report" element={<OrderReport />} />
             <Route path="/promotion" element={<Promotion />} />
             <Route path="/product" element={<Product />} />
-            <Route path="/add-product" element={<AddProduct />} />
             <Route path="/rebuy" element={<Rebuy />} />
           </Routes>
         </Sidebar>
