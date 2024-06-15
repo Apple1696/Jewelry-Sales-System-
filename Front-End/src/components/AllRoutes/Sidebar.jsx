@@ -12,6 +12,7 @@ import { NavLink } from 'react-router-dom';
 import { IoMdExit } from "react-icons/io";
 import './AllRoutes.css'
 import handleRedirect from './../HandleFunction/handleRedirect';
+import { AiFillGolden } from 'react-icons/ai';
 
 const Sidebar = ({ children }) => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -38,6 +39,11 @@ const Sidebar = ({ children }) => {
       path: "/sell",
       name: "Sell",
       icon: <FaMoneyBillWave />
+    },
+    {
+      path: "/gold-value",
+      name: "Gold Value",
+      icon: <AiFillGolden />
     },
     {
       path: "/order-report",
