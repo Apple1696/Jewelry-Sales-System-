@@ -2,17 +2,22 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { MaterialReactTable } from 'material-react-table';
 import { Button, Stack, IconButton } from '@mui/material';
 import { FaEdit, FaTrash } from 'react-icons/fa';
-import { Modal, Input } from 'antd';
+import { Modal, Form, Input, Select, Upload } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import axios from 'axios'; // Import Axios
 
 import handleRedirect from './../../HandleFunction/handleRedirect';
 import EditProduct from './EditProduct';
 
+const { Option } = Select;
+
 const Product = () => {
   const { addProduct } = handleRedirect();
   const [data, setData] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [currentRow, setCurrentRow] = useState(null);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     // Fetch data from the API
@@ -27,7 +32,7 @@ const Product = () => {
 
   const handleEdit = (row) => {
     setCurrentRow(row);
-    setIsModalVisible(true);
+    setIsEditModalVisible(true);
   };
 
   const handleDelete = (row) => {
@@ -40,6 +45,28 @@ const Product = () => {
       })
       .catch(error => {
         console.error('Error deleting item:', error);
+      });
+  };
+
+  const handleAddProduct = () => {
+    setIsAddModalVisible(true);
+  };
+
+  const handleAddSubmit = (values) => {
+    console.log('Form values:', values);
+    // Add the new product to the state
+    setData((prevData) => [...prevData, values]);
+    // Close the modal
+    setIsAddModalVisible(false);
+    // Clear the form
+    form.resetFields();
+    // API call to add the item
+    axios.post('https://666aa8737013419182d04e24.mockapi.io/api/Products', values)
+      .then(response => {
+        console.log('Item added:', response.data);
+      })
+      .catch(error => {
+        console.error('Error adding item:', error);
       });
   };
 
@@ -91,21 +118,21 @@ const Product = () => {
 
   return (
     <div>
+      <Button
+        variant="contained"
+        color="primary"
+        style={{ marginBottom: '16px' }}
+        onClick={handleAddProduct}
+      >
+        Add Product
+      </Button>
       <div className="table-container">
         <MaterialReactTable columns={columns} data={data} />
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginTop: '16px' }}
-          onClick={addProduct}
-        >
-          Add Product
-        </Button>
       </div>
 
       <EditProduct
-        isVisible={isModalVisible}
-        onClose={() => setIsModalVisible(false)}
+        isVisible={isEditModalVisible}
+        onClose={() => setIsEditModalVisible(false)}
         rowData={currentRow ? currentRow.original : null}
         updateData={(updatedRow) => {
           setData((prevData) =>
@@ -115,6 +142,68 @@ const Product = () => {
           );
         }}
       />
+
+      <Modal
+        title="Add Product"
+        visible={isAddModalVisible}
+        onCancel={() => setIsAddModalVisible(false)}
+        onOk={() => form.submit()}
+      >
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleAddSubmit}
+        >
+          <Form.Item
+            name="category"
+            label="Select product type"
+            rules={[{ required: true, message: 'Please select a product type!' }]}
+          >
+            <Select placeholder="Select a product type">
+              <Option value="Necklace">Necklace</Option>
+              <Option value="Bracelet">Bracelet</Option>
+              <Option value="Ring">Ring</Option>
+              <Option value="Earrings">Earrings</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            name="id"
+            label="Product ID"
+            rules={[{ required: true, message: 'Please input the product ID!' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="name"
+            label="Product Title"
+            rules={[{ required: true, message: 'Please input the product title!' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="price"
+            label="Price per item"
+            rules={[{ required: true, message: 'Please input the price per item!' }]}
+          >
+            <Input type="number" />
+          </Form.Item>
+          <Form.Item
+            name="image"
+            label="Image Upload"
+            valuePropName="fileList"
+            getValueFromEvent={(e) => e.fileList}
+            rules={[{ required: true, message: 'Please upload an image!' }]}
+          >
+            <Upload
+              name="image"
+              listType="picture"
+              beforeUpload={() => false} // Prevent automatic upload
+            >
+              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+            </Upload>
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 };
