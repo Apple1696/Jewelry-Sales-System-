@@ -2,8 +2,10 @@ import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import CustomTable from '../../Designs/CustomTable';
 import handleRedirect from './../../HandleFunction/handleRedirect';
-import { TextField, Button, Box, Typography } from '@mui/material';
+import { TextField, Button, Box, Typography, IconButton } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddCustomer from './AddCustomer'; // Import AddCustomer component
 
 const theme = createTheme({
   palette: {
@@ -22,15 +24,14 @@ const Sell = () => {
   const [productName, setProductName] = useState('');
   const [productId, setProductId] = useState('');
   const [pricePerUnit, setPricePerUnit] = useState(0);
-  const { pickPromotion } = handleRedirect();
-  const [totalAmount, setTotalAmount] = useState(0);
+  const [isCustomerModalVisible, setIsCustomerModalVisible] = useState(false); // State for customer modal
+
+  const { pickPromotion, payment } = handleRedirect();
 
   useEffect(() => {
-    axios.get('https://666aa8737013419182d04e24.mockapi.io/api/Products')
+    axios.get('https://666efd61f1e1da2be521af94.mockapi.io/Cart')
       .then(response => {
         setCartItems(response.data);
-        const total = response.data.reduce((acc, item) => acc + item.totalCost, 0);
-        setTotalAmount(total);
       })
       .catch(error => {
         console.error('Error fetching the products:', error);
@@ -58,7 +59,6 @@ const Sell = () => {
       .then(response => {
         const updatedItems = [...cartItems, response.data];
         setCartItems(updatedItems);
-        setTotalAmount(updatedItems.reduce((acc, item) => acc + item.totalCost, 0));
         setProductName('');
         setProductId('');
         setPricePerUnit(0);
@@ -68,35 +68,66 @@ const Sell = () => {
       });
   };
 
+  const handleDelete = (id) => {
+    axios.delete(`https://666aa8737013419182d04e24.mockapi.io/api/Products/${id}`)
+      .then(() => {
+        const updatedItems = cartItems.filter(item => item.id !== id);
+        setCartItems(updatedItems);
+      })
+      .catch(error => {
+        console.error('Error deleting the product:', error);
+      });
+  };
+
+  const handleAddCustomer = (newCustomer) => {
+    console.log('New customer added:', newCustomer);
+    // You can add further logic to handle the new customer data, such as updating state or making API calls
+  };
+
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'productId',
+        accessorKey: 'productName',
+        header: 'Product Name',
+        size: 150,
+      },
+      {
+        accessorKey: 'id',
         header: 'Product ID',
         size: 150,
       },
       {
-        accessorKey: 'productName',
-        header: 'Product Name',
-        size: 200,
-      },
-      {
-        accessorKey: 'pricePerUnit',
+        accessorKey: 'price',
         header: 'Price Per Unit',
         size: 150,
       },
       {
-        accessorKey: 'totalCost',
+        accessorKey: 'quantity',
+        header: 'Quantity',
+        size: 150,
+      },
+      {
+        accessorKey: 'total',
         header: 'Total Cost',
         size: 150,
       },
+      {
+        accessorKey: 'action',
+        header: 'Action',
+        size: 150,
+        Cell: ({ cell }) => (
+          <IconButton onClick={() => handleDelete(cell.row.original.id)}>
+            <DeleteIcon />
+          </IconButton>
+        ),
+      },
     ],
-    []
+    [cartItems]
   );
 
   return (
     <ThemeProvider theme={theme}>
-      <Box p={2} sx={{ maxWidth: 800, mx: 'auto', py: 4 }}>
+      <Box p={2} sx={{ maxWidth: 1050, mx: 'auto', py: 4 }}>
         <Typography variant="h1" gutterBottom>
           Customer and Cart details
         </Typography>
@@ -119,6 +150,7 @@ const Sell = () => {
           <Button
             variant="contained"
             sx={{ mr: 2 }}
+            onClick={() => setIsCustomerModalVisible(true)}
           >
             Add new customer
           </Button>
@@ -175,7 +207,7 @@ const Sell = () => {
             <CustomTable columns={columns} data={cartItems} />
             <br />
             <Typography variant="h4" gutterBottom>
-              Total Amount: {totalAmount.toFixed(2)}
+              {/* Total Amount: {totalAmount.toFixed(2)} */}
             </Typography>
             <Button
               variant="contained"
@@ -189,11 +221,18 @@ const Sell = () => {
               variant="contained"
               color="primary"
               sx={{ mr: 2 }}
+              onClick={payment}
             >
               Next
             </Button>
           </Box>
         )}
+
+        <AddCustomer
+          isVisible={isCustomerModalVisible}
+          onClose={() => setIsCustomerModalVisible(false)}
+          onAddCustomer={handleAddCustomer}
+        />
       </Box>
     </ThemeProvider>
   );

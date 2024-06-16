@@ -10,6 +10,7 @@ import Rebuy from './../pages/Rebuy/Rebuy';
 import OrderReport from './../pages/OrderReport/OrderReport';
 import PickPromotion from './../pages/Sell/PickPromotion';
 import GoldValue from './../pages/GoldValue/GoldValue';
+import Payment from '../pages/Sell/Payment';
 
 const AllRoutes = () => {
   const location = useLocation();
@@ -21,11 +22,12 @@ const AllRoutes = () => {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/sell" element={<Sell />} />
             <Route path="/gold-value" element={<GoldValue />} />
+            <Route path="/sell" element={<Sell />} />
             <Route path="/pick-promotion" element={<PickPromotion />} />
             <Route path="/order-report" element={<OrderReport />} />
             <Route path="/promotion" element={<Promotion />} />
+            <Route path="/payment" element={<Payment />} />
             <Route path="/product" element={<Product />} />
             <Route path="/rebuy" element={<Rebuy />} />
           </Routes>
