@@ -5,9 +5,11 @@ export default function handleRedirect() {
     const navigate = useNavigate();
     const pickPromotion=()=>navigate('/pick-promotion')
     const handleLogoutConfirm=()=>navigate('/login')
+    const payment=()=>navigate('/payment')
     return{
         pickPromotion,
-        handleLogoutConfirm
+        handleLogoutConfirm,
+        payment,
     }
  
 }
