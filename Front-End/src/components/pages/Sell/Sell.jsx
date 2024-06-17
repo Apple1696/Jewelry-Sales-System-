@@ -80,8 +80,16 @@ const Sell = () => {
   };
 
   const handleAddCustomer = (newCustomer) => {
-    console.log('New customer added:', newCustomer);
-    // You can add further logic to handle the new customer data, such as updating state or making API calls
+    axios.post('https://666aa8737013419182d04e24.mockapi.io/api/Customers', newCustomer)
+      .then(response => {
+        alert('Customer added successfully!');
+        // console.log('New customer added:', response.data);
+        // You can add further logic to handle the new customer data, such as updating state
+      })
+      .catch(error => {
+        console.error('Error adding the customer:', error);
+        alert('Error adding the customer.');
+      });
   };
 
   const columns = useMemo(
