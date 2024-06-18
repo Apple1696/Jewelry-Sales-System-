@@ -103,11 +103,12 @@ const Promotion = () => {
 
   return (
     <Box p={2}>
+      <h1>Promotion List</h1>
       <AddPromotion addPromotion={addPromotion} />
       <Box height={400}>
         <CustomTable columns={columns} data={promotions} />
       </Box>
-
+  
       <EditPromotion
         isVisible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
