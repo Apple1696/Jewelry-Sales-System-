@@ -16,7 +16,8 @@ class JewelryItem extends Model
         "image",
         "gold_weight",
         "category_id",
-        "status"
+        "status",
+        "barcode"
     ];
 
     public function gems() {

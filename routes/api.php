@@ -6,6 +6,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\JewelryItemcController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CustomerController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +22,7 @@ use App\Http\Controllers\OrderController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
-    
+
 });
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -45,3 +47,11 @@ Route::get('/invoices/{id}', [InvoiceController::class,'show']);
 Route::post('/invoices', [InvoiceController::class,'create']);
 Route::put('/invoices/{id}', [InvoiceController::class,'update']);
 Route::delete('/invoices/{id}', [InvoiceController::class,'destroy']);
+Route::get('/items/search/{barcode}', [JewelryItemcController::class, 'search']);
+
+//Customers Route
+Route::get('/customer', [CustomerController::class, 'index']);
+
+Route::post('/customer', [CustomerController::class, 'store']);
+
+Route::get('/customer/search', [CustomerController::class, 'searchByPhone']);

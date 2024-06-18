@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->boolean('is_gem_stone')->default(0);
             $table->unsignedBigInteger('price');
+            $table->integer('barcode');
             $table->timestamps();
         });
     }
