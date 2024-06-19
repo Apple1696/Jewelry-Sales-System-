@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\JewelryItemcController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderDetailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,3 +46,10 @@ Route::get('/invoices/{id}', [InvoiceController::class,'show']);
 Route::post('/invoices', [InvoiceController::class,'create']);
 Route::put('/invoices/{id}', [InvoiceController::class,'update']);
 Route::delete('/invoices/{id}', [InvoiceController::class,'destroy']);
+
+//OrderDetail
+Route::get('/order-details', [OrderDetailController::class, 'index']);
+Route::post('/order-details', [OrderDetailController::class, 'store']);
+Route::get('/order-details/{id}', [OrderDetailController::class, 'show']);
+Route::put('/order-details/{id}', [OrderDetailController::class, 'update']);
+Route::delete('/order-details/{id}', [OrderDetailController::class, 'destroy']);
