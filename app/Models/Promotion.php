@@ -9,7 +9,7 @@ use App\Models\Customer;
 class Promotion extends Model
 {
     use HasFactory;
-    protected $table = 'promotions';
+    protected $table = 'promotion';
     protected $primaryKey = 'promotion_id';
     protected $fillable = [
         'name',
