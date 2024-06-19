@@ -4,13 +4,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\InvoiceController;
-use App\Http\Controllers\JewelryItemcController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderDetailController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\CounterController;
-
+use App\Http\Controllers\JewelryItemcController;
 
 /*
 |--------------------------------------------------------------------------
