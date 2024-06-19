@@ -15,7 +15,8 @@ class Gem extends Model
         "name",
         "is_gem_stone",
         "price",
-        "image"
+        "image",
+        "barcode"
     ];
 
     public function jewelryItems() {
