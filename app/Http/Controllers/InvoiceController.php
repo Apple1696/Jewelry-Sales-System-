@@ -21,13 +21,20 @@ class InvoiceController extends Controller
      */
     public function create(Request $request)
     {
-        $this->validate($request, [
-            'order_id' => 'require|integer|exists:orders,id',
-            'type' => 'require|string',
-            'expire_date' => Carbon::now()->addMonth(12),
+        // Xác thực dữ liệu đầu vào
+        $request->validate([
+            'order_id' => 'required|integer|exists:orders,id',
+            'type' => 'required|string',
         ]);
-        $invoice = Invoice::create($request->all());
-        return response()->json($invoice);
+
+        // Tạo hóa đơn mới với ngày hết hạn
+        $invoice = Invoice::create([
+            'order_id' => $request->order_id,
+            'type' => $request->type,
+            'expire_date' => Carbon::now()->addMonths(12),
+        ]);
+
+        return response()->json("add success", 201);
     }
 
     public function show(string $id)
@@ -38,22 +45,28 @@ class InvoiceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        $this->validate($request, [
+        $request->validate([
             'order_id' => 'require|integer|exists:orders,id',
             'type' => 'require|string',
         ]);
+
         $invoice = Invoice::find($id);
 
-        if ($invoice == null) {
-            return response()->json("not found any invoice", 404);
-        } else {
-            $invoice->update($request->all());
-            return response()->json(Invoice::find($id), 200);
+        if (!$invoice) {
+            return response()->json(['error' => 'Invoice not found'], 404);
         }
-    }
 
+        // Cập nhật invoice
+        $invoice->update([
+            'order_id' => $request->order_id,
+            'type' => $request->type,
+            'updated_at' => Carbon::now(),
+        ]);
+
+        return response()->json($invoice, 200);
+    }
     /**
      * Remove the specified resource from storage.
      */

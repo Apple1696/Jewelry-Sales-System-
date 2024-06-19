@@ -33,11 +33,11 @@ Route::get('/items/{id}', [JewelryItemcController::class, 'show']);
 
 Route::post('/items/{id}', [JewelryItemcController::class, 'update']);
 
-//Order
-Route::get('/orders', [OrderController::class,'index']);
-Route::post('/orders', [OrderController::class,'store']);
-Route::put('/orders/{id}', [OrderController::class,'update']);
-Route::delete('/orders/{id}', [OrderController::class,'destroy']);
+// Order routes
+Route::get('/orders', [OrderController::class, 'index']);
+Route::post('/orders', [OrderController::class, 'store']);
+Route::put('/orders/{id}', [OrderController::class, 'update']);
+Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
 
 //Invoice
 Route::get('/invoices', [InvoiceController::class,'index']);

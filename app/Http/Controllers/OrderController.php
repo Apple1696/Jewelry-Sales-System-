@@ -60,7 +60,7 @@ class OrderController extends Controller
         $order->load('orderDetails', 'invoice');
 
         // Trả về phản hồi JSON với mã trạng thái 201 (Created)
-        return response()->json($order, 201);
+        return response()->json("Add Succuess", 201);
     }
 
     public function update(Request $request, $id)
@@ -90,11 +90,15 @@ class OrderController extends Controller
 
     public function destroy($id)
     {
-        $item = Orders::find($id);
-        if (!$item) {
+        $order = Orders::find($id);
+
+        if (!$order) {
             return response()->json(['error' => 'Order not found'], 404);
         }
-        $item->delete();
-        return response()->json('Delete success');
+
+        $order->orderDetails()->delete();
+        $order->delete();
+
+        return response()->json(['success' => 'Order deleted successfully'], 200);
     }
 }
