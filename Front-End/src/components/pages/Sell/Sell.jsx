@@ -1,3 +1,5 @@
+// Sell.jsx
+
 import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import CustomTable from '../../Designs/CustomTable';
@@ -6,6 +8,7 @@ import { TextField, Button, Box, Typography, IconButton } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCustomer from './AddCustomer'; // Import AddCustomer component
+import CheckCustomer from './CheckCustomer'; // Import CheckCustomer component
 
 const theme = createTheme({
   palette: {
@@ -25,6 +28,8 @@ const Sell = () => {
   const [productId, setProductId] = useState('');
   const [pricePerUnit, setPricePerUnit] = useState(0);
   const [isCustomerModalVisible, setIsCustomerModalVisible] = useState(false); // State for customer modal
+  const [fullName, setFullName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
 
   const { pickPromotion, payment } = handleRedirect();
 
@@ -146,15 +151,14 @@ const Sell = () => {
             variant="outlined"
             fullWidth
             sx={{ mb: 2 }}
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
           />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSave}
-            sx={{ mr: 2 }}
-          >
-            Inspect
-          </Button>
+          <CheckCustomer
+            fullName={fullName}
+            phoneNumber={phoneNumber}
+            onValidCustomer={handleSave}
+          />
           <Button
             variant="contained"
             sx={{ mr: 2 }}

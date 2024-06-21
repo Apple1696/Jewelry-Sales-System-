@@ -107,7 +107,7 @@ const Promotion = () => {
       <Box height={400} style={{ overflowX: 'auto', padding: '20px', borderRadius: '10px', boxShadow: '0px 0px 10px rgba(0,0,0,0.2)' }}>
         <CustomTable columns={columns} data={promotions} />
       </Box>
-
+  
       <EditPromotion
         isVisible={isModalVisible}
         onClose={() => setIsModalVisible(false)}

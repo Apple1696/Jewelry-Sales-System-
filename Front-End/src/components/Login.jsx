@@ -13,12 +13,23 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://666aa8737013419182d04e24.mockapi.io/api/User', { username, password });
-      // Login successful, redirect to dashboard page
-      window.location.href = '/dashboard';
+      // Fetch the list of users from the API
+      const response = await axios.get('https://6670fb58e083e62ee439a8f8.mockapi.io/Accounts');
+      const users = response.data;
+
+      // Check if the provided username and password exist in the fetched data
+      const user = users.find(user => user.username === username && user.password === password);
+
+      if (user) {
+        // Login successful, redirect to dashboard page
+        window.location.href = '/dashboard';
+      } else {
+        // Credentials are incorrect, display error message
+        setErrorMessage('Invalid username or password. Please try again.');
+      }
     } catch (error) {
       // API returned an error, display error message
-      setErrorMessage('Error logging in. Please try again.');
+      setErrorMessage('Error logging in. Please try again.'); 
       console.error('Error:', error);
     }
   };
