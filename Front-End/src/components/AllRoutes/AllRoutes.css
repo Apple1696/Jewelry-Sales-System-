@@ -101,7 +101,7 @@
     background-color: #4CAF50;
     color: #fff;
     cursor: pointer;
-  }
+  } 
   
   .logout-modal-content button:hover {
     background-color: #3e8e41;
@@ -110,3 +110,5 @@
   main {
     transition: filter 0.3s;
   }
+
+  

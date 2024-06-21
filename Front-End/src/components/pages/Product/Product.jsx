@@ -117,22 +117,22 @@ const Product = () => {
   );
 
   return (
-    <div>
-      <h1>Product List</h1>
+    <div style={{ backgroundColor: '#f0f0f0', padding: '20px' }}>
+      <h1 style={{ color: 'black', fontSize: '24px', fontWeight: 'bold' }}>Product List</h1>
       <Button
         variant="contained"
         color="primary"
-        style={{ marginBottom: '16px' }}
+        style={{ marginBottom: '16px', backgroundColor: 'black', color: 'white' }}
         onClick={handleAddProduct}
       >
         Add Product
       </Button>
-      <div className="table-container">
+      <div className="table-container" style={{ overflowX: 'auto' }}>
         <MaterialReactTable columns={columns} data={data} />
       </div>
 
       <EditProduct
-        isVisible={isEditModalVisible}
+isVisible={isEditModalVisible}
         onClose={() => setIsEditModalVisible(false)}
         rowData={currentRow ? currentRow.original : null}
         updateData={(updatedRow) => {
@@ -149,18 +149,21 @@ const Product = () => {
         visible={isAddModalVisible}
         onCancel={() => setIsAddModalVisible(false)}
         onOk={() => form.submit()}
+        style={{ backgroundColor: '#f0f0f0' }}
       >
         <Form
           form={form}
           layout="vertical"
           onFinish={handleAddSubmit}
+          style={{ backgroundColor: 'white', padding: '20px' }}
         >
           <Form.Item
             name="category"
             label="Select product type"
             rules={[{ required: true, message: 'Please select a product type!' }]}
+            style={{ marginBottom: '10px' }}
           >
-            <Select placeholder="Select a product type">
+            <Select placeholder="Select a product type" style={{ width: '100%' }}>
               <Option value="Necklace">Necklace</Option>
               <Option value="Bracelet">Bracelet</Option>
               <Option value="Ring">Ring</Option>
@@ -171,22 +174,25 @@ const Product = () => {
             name="id"
             label="Product ID"
             rules={[{ required: true, message: 'Please input the product ID!' }]}
+            style={{ marginBottom: '10px' }}
           >
-            <Input />
+            <Input style={{ width: '100%' }} />
           </Form.Item>
           <Form.Item
             name="name"
             label="Product Title"
             rules={[{ required: true, message: 'Please input the product title!' }]}
+            style={{ marginBottom: '10px' }}
           >
-            <Input />
+            <Input style={{ width: '100%' }} />
           </Form.Item>
           <Form.Item
             name="price"
             label="Price per item"
             rules={[{ required: true, message: 'Please input the price per item!' }]}
+            style={{ marginBottom: '10px' }}
           >
-            <Input type="number" />
+            <Input type="number" style={{ width: '100%' }} />
           </Form.Item>
           <Form.Item
             name="image"
@@ -194,13 +200,15 @@ const Product = () => {
             valuePropName="fileList"
             getValueFromEvent={(e) => e.fileList}
             rules={[{ required: true, message: 'Please upload an image!' }]}
+            style={{ marginBottom: '10px' }}
           >
             <Upload
               name="image"
               listType="picture"
               beforeUpload={() => false} // Prevent automatic upload
+              style={{ width: '100%' }}
             >
-              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+              <Button icon={<UploadOutlined />} style={{ width: '100%' }}>Click to Upload</Button>
             </Upload>
           </Form.Item>
         </Form>

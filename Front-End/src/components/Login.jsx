@@ -14,7 +14,7 @@ const Login = () => {
     e.preventDefault();
     try {
       // Fetch the list of users from the API
-      const response = await axios.get('https://6670fb58e083e62ee439a8f8.mockapi.io/Accounts');
+      const response = await axios.get('https://6670fb58e083e62ee439a8f8.mockapi.io/Account');
       const users = response.data;
 
       // Check if the provided username and password exist in the fetched data

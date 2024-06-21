@@ -88,10 +88,10 @@ const Promotion = () => {
         size: 150,
         Cell: ({ row }) => (
           <Stack direction="row" spacing={1}>
-            <IconButton color="primary" onClick={() => handleEdit(row)}>
+            <IconButton color="primary" onClick={() => handleEdit(row)} style={{ backgroundColor: 'black', color: 'white' }}>
               <FaEdit />
             </IconButton>
-            <IconButton color="secondary" onClick={() => handleDelete(row)}>
+            <IconButton color="secondary" onClick={() => handleDelete(row)} style={{ backgroundColor: 'black', color: 'white' }}>
               <FaTrash />
             </IconButton>
           </Stack>
@@ -102,10 +102,9 @@ const Promotion = () => {
   );
 
   return (
-    <Box p={2}>
-      <h1>Promotion List</h1>
-      <AddPromotion addPromotion={addPromotion} />
-      <Box height={400}>
+    <Box p={2} style={{ backgroundColor: '#f0f0f0', padding: '20px', borderRadius: '10px', boxShadow: '0px 0px 10px rgba(0,0,0,0.2)' }}>
+      <AddPromotion addPromotion={addPromotion} style={{ marginBottom: '16px', backgroundColor: 'black', color: 'white', padding: '10px', borderRadius: '10px' }} />
+      <Box height={400} style={{ overflowX: 'auto', padding: '20px', borderRadius: '10px', boxShadow: '0px 0px 10px rgba(0,0,0,0.2)' }}>
         <CustomTable columns={columns} data={promotions} />
       </Box>
   
@@ -120,6 +119,7 @@ const Promotion = () => {
             )
           );
         }}
+        style={{ backgroundColor: '#f0f0f0', padding: '20px', borderRadius: '10px', boxShadow: '0px 0px 10px rgba(0,0,0,0.2)' }}
       />
     </Box>
   );
