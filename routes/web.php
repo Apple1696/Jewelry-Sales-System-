@@ -15,7 +15,7 @@ use App\Http\Controllers\TestController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect("/admin");
 });
 
-Route::get('/test', [TestController::class, 'test']);
+// Route::get('/test', [TestController::class, 'test']);

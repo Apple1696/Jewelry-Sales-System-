@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('invoices', function (Blueprint $table) {
-            $table->id();
-            $table->string('type');
-            $table->foreignId('order_id')->constrained('orders')->onDelete('cascade'); 
-            $table->dateTime('expire_date');   
-            $table->timestamps();
+        Schema::table('orders', function (Blueprint $table) {
+            $table->unsignedBigInteger('staff_id');
+            $table->foreign('staff_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -25,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('invoices');
+        Schema::table('orders', function (Blueprint $table) {
+            //
+        });
     }
 };

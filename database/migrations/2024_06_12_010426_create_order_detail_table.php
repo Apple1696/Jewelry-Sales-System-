@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('order_details', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('gem_id');
-            @ $table->unsignedBigInteger('quantity');
+            $table->unsignedBigInteger('item_id');
+            $table->unsignedBigInteger('quantity');
             $table->unsignedBigInteger('order_id');
+            $table->foreign('item_id')->references('id')->on('jewelry_items')->onDelete('cascade');
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
         });
     }

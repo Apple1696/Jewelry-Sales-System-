@@ -12,8 +12,11 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use App\Filament\Exports\JewelryItemExporter as ItemExporter;
 use Filament\Tables\Actions\ExportAction;
+use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use PhpOffice\PhpWord\TemplateProcessor;
+use Carbon\Carbon;
 
 class JewelryItemResource extends Resource
 {
@@ -57,28 +60,28 @@ class JewelryItemResource extends Resource
 
     public static function table(Table $table): Table
     {
-        $url = 'https://www.goldapi.io/api/XAU/USD';
-        $accessToken = 'goldapi-vbiim19lw5tb31h-io';
+        // $url = 'https://www.goldapi.io/api/XAU/USD';
+        // $accessToken = 'goldapi-vbiim19lw5tb31h-io';
 
-        // Tạo yêu cầu HTTP GET
-        $ch = curl_init();
+        // // Tạo yêu cầu HTTP GET
+            // $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'x-access-token: ' . $accessToken
-        ]);
+        // curl_setopt($ch, CURLOPT_URL, $url);
+        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        // curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        //     'x-access-token: ' . $accessToken
+        // ]);
 
-        // Thực hiện yêu cầu và lấy kết quả
-        $response = curl_exec($ch);
-        curl_close($ch);
+        // // Thực hiện yêu cầu và lấy kết quả
+        // $response = curl_exec($ch);
+        // curl_close($ch);
 
-        // Giải mã JSON nhận được
-        $data = json_decode($response, true);
+        // // Giải mã JSON nhận được
+        // $data = json_decode($response, true);
 
-        // Lấy giá vàng từ dữ liệu JSON
-        $goldPrice = isset($data['price']) ? $data['price'] : 'N/A';
-        $goldPrice = 10;
+        // // Lấy giá vàng từ dữ liệu JSON
+        // $goldPrice = isset($data['price']) ? $data['price'] : 'N/A';
+        $goldPrice = 10000;
         return $table
             ->columns([
                 Tables\Columns\ImageColumn::make('image')
@@ -86,9 +89,6 @@ class JewelryItemResource extends Resource
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('gold_weight'),
                 Tables\Columns\TextColumn::make('price')
-                    ->getStateUsing(function($record) use ($goldPrice) {
-                        return $record->gems()->sum('price') + ($record->gold_weight * $goldPrice);
-                    })
                     ->money('VND'),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
@@ -107,6 +107,23 @@ class JewelryItemResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Action::make('warranty')
+                    // ->requiresConfirmation()
+                    ->accessSelectedRecords()
+                    ->action(function ($record) {
+        
+                        $templatePath = public_path('templates/warranty.docx');
+                        $fileName = "warranty-". $record->id .".docx";
+
+                        $templateProcessor = new TemplateProcessor($templatePath);   
+                        $templateProcessor->setValue("NAME", $record->name); 
+                        $templateProcessor->setValue("ID", $record->id); 
+                        $templateProcessor->setValue("FROM_DATE", Carbon::now()->format("d-m-Y")); 
+                        $templateProcessor->setValue("TO_DATE", Carbon::now()->addMonths(12)->format("d-m-Y")); 
+                        $tempFilePath = tempnam(sys_get_temp_dir(), 'export') . '.docx';
+                        $templateProcessor->saveAs($tempFilePath);
+                        return response()->download($tempFilePath, $fileName)->deleteFileAfterSend(true);
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

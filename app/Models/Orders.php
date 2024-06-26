@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Orders extends Model
 {
@@ -13,17 +14,35 @@ class Orders extends Model
     public $timestamps = true;
     protected $fillable = [
         'order_type',
-        'order_date',
         'total_price',
         'user_id',
+        'staff_id'
     ];
 
-    public function orderDetails()
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function($model)
+        {
+            $user = Auth::user();
+            $model->staff_id = $user->id;
+        });
+  
+    }
+
+
+    public function details()
     {
         return $this->hasMany(OrderDetail::class, 'order_id', 'id');
     }
-    public function user(){
-        return $this->belongsTo(User::class);
+
+    public function customer(){
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function staff(){
+        return $this->belongsTo(User::class, 'staff_id', 'id');
     }
 
     public function invoice()

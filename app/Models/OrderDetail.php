@@ -12,14 +12,18 @@ class OrderDetail extends Model
     protected $primaryKey = 'id';
     public $timestamps = false;
     protected $fillable = [
-        'gem_id',
+        'item_id',
         'quantity',
         'order_id',
     ];
 
-    public function orders()
+    public function order()
     {
-        return $this->belongsTo(Orders::class, 'order_id', 'order_id');
+        return $this->belongsTo(Orders::class, 'order_id', 'id');
     }
     
+    public function item()
+    {
+        return $this->belongsTo(JewelryItem::class, 'item_id', 'id');
+    }
 }

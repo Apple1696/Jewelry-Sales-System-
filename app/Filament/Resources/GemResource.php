@@ -10,6 +10,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Enums\FiltersLayout;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -46,10 +48,23 @@ class GemResource extends Resource
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('price')
                     ->money('VND'),
+                Tables\Columns\TextColumn::make('is_gem_stone')
+                    ->badge()
+                    ->getStateUsing(function($record) {
+                        return $record->is_gem_stone ? "Gem stone" : "Normal stone";
+                    })
+                    ->color(fn (string $state): string => match ($state) {
+                        'Normal stone' => 'gray',
+                        'Gem stone' => 'warning'
+                    }),
             ])
             ->filters([
-                //
-            ])
+                SelectFilter::make('is_gem_stone')
+                    ->options([
+                        '1' => 'Gem stone',
+                        '0' => 'Normal stone',
+                    ])
+                ], layout: FiltersLayout::Modal)
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
