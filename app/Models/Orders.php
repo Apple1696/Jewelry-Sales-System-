@@ -29,6 +29,10 @@ class Orders extends Model
             $model->staff_id = $user->id;
         });
   
+        static::created(function($model)
+        {
+            
+        });
     }
 
 

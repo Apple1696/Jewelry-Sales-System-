@@ -20,6 +20,7 @@ class DetailsRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\Select::make('item_id')
+                    ->unique()
                     ->options(function() {
                         return JewelryItem::all()->pluck('name', 'id');
                     }),
