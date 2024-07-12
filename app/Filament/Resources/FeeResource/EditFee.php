@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\GemResource\Pages;
+namespace App\Filament\Resources\FeeResource\Pages;
 
-use App\Filament\Resources\GemResource;
+use App\Filament\Resources\FeeResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditGem extends EditRecord
+class EditFee extends EditRecord
 {
-    protected static string $resource = GemResource::class;
+    protected static string $resource = FeeResource::class;
 
     protected function getHeaderActions(): array
     {
