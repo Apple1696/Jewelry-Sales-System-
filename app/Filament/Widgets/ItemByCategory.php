@@ -17,9 +17,17 @@ class ItemByCategory extends ChartWidget
                 [
                     'label' => 'Item by Category',
                     'data' => $categories->pluck('items_count')->toArray(),
+                    'borderColor' => [
+                        'rgb(0, 255, 0)',
+                        'rgb(0, 255, 0)',
+                        'rgb(0, 255, 0)',
+        
+                      ],
                 ],
+       
             ],
             'labels' => Category::all()->pluck('name')->toArray(),
+
         ];
     }
 

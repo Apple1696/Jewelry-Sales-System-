@@ -12,8 +12,11 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use PhpOffice\PhpWord\TemplateProcessor;
+use Carbon\Carbon;
 
 class OrdersResource extends Resource
 {
@@ -21,7 +24,9 @@ class OrdersResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = "Orders";
+    protected static ?string $navigationGroup = "Warranty";
+
+    protected static ?string $modelLabel = "Warranty";
 
     public static function form(Form $form): Form
     {
@@ -93,6 +98,35 @@ class OrdersResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Action::make('warranty')
+                // ->requiresConfirmation()
+                ->accessSelectedRecords()
+                ->action(function ($record) {
+                    
+                    $templatePath = public_path('templates/warranty.docx');
+                    $fileName = "warranty-". $record->id .".docx";
+
+                    $templateProcessor = new TemplateProcessor($templatePath);   
+                    $templateProcessor->setValue("CUSTOMER", $record->customer->name); 
+                    $templateProcessor->setValue("PURCHASE", Carbon::parse($record->created_at)->format("d-m-Y")); 
+                    $templateProcessor->setValue("NAME", $record->name); 
+                    $templateProcessor->setValue("ID", $record->id); 
+                    $templateProcessor->setValue("FROM_DATE", Carbon::now()->format("d-m-Y")); 
+                    $templateProcessor->setValue("TO_DATE", Carbon::now()->addMonths(12)->format("d-m-Y")); 
+                    $tempFilePath = tempnam(sys_get_temp_dir(), 'export') . '.docx';
+                    $rowIndex = 1;
+                    $templateProcessor->cloneRow('ITEM_NAME', $record->details->count());
+                    foreach($record->details as $detail) {
+                        // $templateProcessor->setValue("STT#{$rowIndex}", $rowIndex);
+                        $templateProcessor->setValue("ITEM_NAME#{$rowIndex}", $detail->item->name);
+                        $templateProcessor->setValue("ITEM_QUANTITY#{$rowIndex}", $detail->quantity);
+                        $templateProcessor->setValue("ITEM_PRICE#{$rowIndex}", $detail->item->price);
+                        $rowIndex++;
+                    }
+
+                    $templateProcessor->saveAs($tempFilePath);
+                    return response()->download($tempFilePath, $fileName)->deleteFileAfterSend(true);
+                }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

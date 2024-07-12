@@ -11,6 +11,7 @@ class Dashboard extends \Filament\Pages\Dashboard
             \App\Filament\Widgets\GoldPrice::class,
             \App\Filament\Widgets\MonthlyRevenue::class,
             \App\Filament\Widgets\ItemByCategory::class,
+            \App\Filament\Widgets\LatestOrders::class,
         ];
     }
 }

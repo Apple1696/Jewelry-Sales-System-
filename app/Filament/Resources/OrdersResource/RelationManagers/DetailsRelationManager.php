@@ -20,9 +20,9 @@ class DetailsRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\Select::make('item_id')
-                    ->unique()
+                    // ->unique()
                     ->options(function() {
-                        return JewelryItem::all()->pluck('name', 'id');
+                        return JewelryItem::where("status", "<>", "sold")->pluck('name', 'id');
                     }),
                 Forms\Components\TextInput::make('quantity')
                     ->numeric()
@@ -46,6 +46,7 @@ class DetailsRelationManager extends RelationManager
                     'draft' => 'gray',
                     'selling' => 'warning',
                     'sold' => 'success',
+                    'rebuy' => 'success',
                 }),
             Tables\Columns\TextColumn::make('quantity'),
             ])
