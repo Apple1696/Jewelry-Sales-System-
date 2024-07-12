@@ -26,14 +26,11 @@ class ItemsOverview extends BaseWidget
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->chart([1,1])
                 ->color('success'),
-<<<<<<< HEAD
             Stat::make('Rebuy', Item::where('status', 'rebuy')->count())
                 // ->description('32k increase')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->chart([1,1])
                 ->color('success'),
-=======
->>>>>>> a867b9f1ba5b51dce31140ad56ac1c495c9f196b
         ];
     }
 }
