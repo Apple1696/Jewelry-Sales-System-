@@ -13,7 +13,7 @@ class EditGem extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()->confirm('Are you sure you want to delete this gem?'),
         ];
     }
 }
