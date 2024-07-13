@@ -5,7 +5,8 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\OrdersResource\Pages;
 use App\Filament\Resources\OrdersResource\RelationManagers;
 use App\Models\Orders;
-use App\Models\User;
+use App\Models\Customer;
+use App\Models\Promotion;
 use App\Models\JewelryItem;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -24,9 +25,9 @@ class OrdersResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = "Warranty";
+    protected static ?string $navigationGroup = "Invoice";
 
-    protected static ?string $modelLabel = "Warranty";
+    protected static ?string $modelLabel = "Invoice";
 
     public static function form(Form $form): Form
     {
@@ -40,14 +41,16 @@ class OrdersResource extends Resource
                                 "sell" => "Sell"
                             ])
                             ->columnSpan(4),
-                        Forms\Components\Select::make('user_id')
+                        Forms\Components\Select::make('customer_id')
+                            ->live()
                             ->options(function() {
-                                return User::all()->pluck("name", "id")->toArray();
+                                return Customer::all()->pluck("name", "id")->toArray();
                             })
                             ->columnSpan(4),
-                        Forms\Components\TextInput::make('total_price')
-                            ->numeric()
-                            ->minValue(0)
+                        Forms\Components\Select::make('promotion_id')
+                            ->options(function($get) {
+                                return Promotion::isAvailableForCustomer($get('customer_id'))->get()->pluck('name', 'id')->toArray();
+                            })
                             ->columnSpan(4),
                         // Forms\Components\Repeater::make('details')
                         //     ->relationship()
@@ -78,15 +81,7 @@ class OrdersResource extends Resource
                 Tables\Columns\TextColumn::make('order_type')
                     ->label("Type"),
                 Tables\Columns\TextColumn::make('price')
-                    ->label("Type")
-                    ->getStateUsing(function($record) {
-                        $details = $record->details;
-                        $price = 0;
-                        foreach($details as $detail) {
-                            $price += $detail->item->price * $detail->quantity;
-                        }
-                        return $price;
-                    })
+                    ->label("Price")
                     ->money('VND'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label("Created At"),
@@ -98,16 +93,17 @@ class OrdersResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Action::make('warranty')
-                // ->requiresConfirmation()
+                Action::make('Invoice')
+                ->icon('heroicon-m-arrow-down-tray')
                 ->accessSelectedRecords()
                 ->action(function ($record) {
                     
-                    $templatePath = public_path('templates/warranty.docx');
-                    $fileName = "warranty-". $record->id .".docx";
+                    $templatePath = public_path('templates/invoice.docx');
+                    $fileName = "invoice-". $record->id .".docx";
 
                     $templateProcessor = new TemplateProcessor($templatePath);   
                     $templateProcessor->setValue("CUSTOMER", $record->customer->name); 
+                    $templateProcessor->setValue("PHONE", $record->customer->phone); 
                     $templateProcessor->setValue("PURCHASE", Carbon::parse($record->created_at)->format("d-m-Y")); 
                     $templateProcessor->setValue("NAME", $record->name); 
                     $templateProcessor->setValue("ID", $record->id); 
@@ -117,13 +113,13 @@ class OrdersResource extends Resource
                     $rowIndex = 1;
                     $templateProcessor->cloneRow('ITEM_NAME', $record->details->count());
                     foreach($record->details as $detail) {
-                        // $templateProcessor->setValue("STT#{$rowIndex}", $rowIndex);
+                        $templateProcessor->setValue("INDEX#{$rowIndex}", $rowIndex);
+                        $templateProcessor->setValue("PERCENTANT#{$rowIndex}", $record->promotion->discount_percentage);
                         $templateProcessor->setValue("ITEM_NAME#{$rowIndex}", $detail->item->name);
-                        $templateProcessor->setValue("ITEM_QUANTITY#{$rowIndex}", $detail->quantity);
-                        $templateProcessor->setValue("ITEM_PRICE#{$rowIndex}", $detail->item->price);
+                        $templateProcessor->setValue("ITEM_PRICE#{$rowIndex}", (1 - ($record->promotion->discount_percentage / 100)) * $detail->item->price);
                         $rowIndex++;
                     }
-
+                    $templateProcessor->setValue("INVOICE_PRICE", $record->price); 
                     $templateProcessor->saveAs($tempFilePath);
                     return response()->download($tempFilePath, $fileName)->deleteFileAfterSend(true);
                 }),

@@ -36,12 +36,16 @@ class DetailsRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\ImageColumn::make('item.image')
                 ->disk('public'),
-            Tables\Columns\TextColumn::make('item.name'),
-            Tables\Columns\TextColumn::make('item.gold_weight'),
+            Tables\Columns\TextColumn::make('item.name')
+                ->label('Name'),
+            Tables\Columns\TextColumn::make('item.gold_weight')
+                ->label('Hold Weight'),
             Tables\Columns\TextColumn::make('item.price')
+                ->label('Price')
                 ->money('VND'),
             Tables\Columns\TextColumn::make('item.status')
                 ->badge()
+                ->label('Status')
                 ->color(fn (string $state): string => match ($state) {
                     'draft' => 'gray',
                     'selling' => 'warning',

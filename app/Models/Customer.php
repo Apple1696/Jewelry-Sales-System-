@@ -12,15 +12,21 @@ class Customer extends Model
 
     protected $table = 'customers';
     protected $fillable = [
-        'full_name',
-        'location',
-        'phone_number',
+        'name',
+        'email',
+        'phone',
         'point',
+        'photo',
         'promotion_id',
     ];
 
-    public function promotion()
+    // public function promotion()
+    // {
+    //     return $this->belongsTo(Promotion::class, 'promotion_id', 'promotion_id');
+    // }
+
+    public function pointsTransactions()
     {
-        return $this->belongsTo(Promotion::class, 'promotion_id', 'promotion_id');
+        return $this->hasMany(PointsTransaction::class);
     }
 }

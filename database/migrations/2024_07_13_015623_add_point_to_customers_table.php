@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('gems', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->boolean('is_gem_stone')->default(0);
-            $table->unsignedBigInteger('price');
-            $table->timestamps();
+        Schema::table('customers', function (Blueprint $table) {
+            $table->bigInteger('point')->default(0);
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('gems');
+        Schema::table('customers', function (Blueprint $table) {
+            //
+        });
     }
 };
