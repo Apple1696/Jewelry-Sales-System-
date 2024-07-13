@@ -2,21 +2,22 @@
 
 namespace App\Filament\Resources;
 
+// Custom application namespace
 use App\Filament\Resources\JewelryItemResource\Pages;
 use App\Filament\Resources\JewelryItemResource\RelationManagers;
-use App\Models\JewelryItem;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-use App\Filament\Exports\JewelryItemExporter as ItemExporter;
-use Filament\Tables\Actions\ExportAction;
-use Filament\Tables\Actions\Action;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use PhpOffice\PhpWord\TemplateProcessor;
-use Carbon\Carbon;
+use App\Models\JewelryItem;  // Custom application model
+use Filament\Forms;  // Filament Forms
+use Filament\Forms\Form;  // Filament Forms
+use Filament\Resources\Resource;  // Filament Resource
+use Filament\Tables;  // Filament Tables
+use Filament\Tables\Table;  // Filament Tables
+use App\Filament\Exports\JewelryItemExporter as ItemExporter;  // Custom application export class
+use Filament\Tables\Actions\ExportAction;  // Filament Tables Actions
+use Filament\Tables\Actions\Action;  // Filament Tables Actions
+use Illuminate\Database\Eloquent\Builder;  // Laravel Eloquent
+use Illuminate\Database\Eloquent\SoftDeletingScope;  // Laravel Eloquent
+use PhpOffice\PhpWord\TemplateProcessor;  // PhpOffice\PhpWord
+use Carbon\Carbon;  // Carbon
 
 class JewelryItemResource extends Resource
 {
@@ -32,25 +33,25 @@ class JewelryItemResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Grid::make(12)
+                Forms\Components\Grid::make(12)  // Filament Forms Components
                     ->schema([
-                        Forms\Components\TextInput::make('name')
+                        Forms\Components\TextInput::make('name')  // Filament Forms Components
                             ->columnSpan(3),
-                        Forms\Components\TextInput::make('gold_weight')
+                        Forms\Components\TextInput::make('gold_weight')  // Filament Forms Components
                             ->columnSpan(3),
-                        Forms\Components\Select::make('category_id')
+                        Forms\Components\Select::make('category_id')  // Filament Forms Components
                             ->options(function () {
-                                return \App\Models\Category::all()->pluck('name', 'id')->toArray();
+                                return \App\Models\Category::all()->pluck('name', 'id')->toArray();  // Custom application model
                             })
                             ->columnSpan(3),
-                        Forms\Components\Select::make('status')
+                        Forms\Components\Select::make('status')  // Filament Forms Components
                             ->options([
                                 'draft' => 'Draft',
                                 'selling' => 'Selling',
                                 'sold' => 'Sold',
                             ])
                             ->columnSpan(3),
-                        Forms\Components\FileUpload::make('image')
+                        Forms\Components\FileUpload::make('image')  // Filament Forms Components
                             ->disk('public')
                             ->columnSpan(12),
                     ])
@@ -60,68 +61,45 @@ class JewelryItemResource extends Resource
 
     public static function table(Table $table): Table
     {
-        // $url = 'https://www.goldapi.io/api/XAU/USD';
-        // $accessToken = 'goldapi-vbiim19lw5tb31h-io';
-
-        // // Tạo yêu cầu HTTP GET
-            // $ch = curl_init();
-
-        // curl_setopt($ch, CURLOPT_URL, $url);
-        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        // curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        //     'x-access-token: ' . $accessToken
-        // ]);
-
-        // // Thực hiện yêu cầu và lấy kết quả
-        // $response = curl_exec($ch);
-        // curl_close($ch);
-
-        // // Giải mã JSON nhận được
-        // $data = json_decode($response, true);
-
-        // // Lấy giá vàng từ dữ liệu JSON
-        // $goldPrice = isset($data['price']) ? $data['price'] : 'N/A';
         $goldPrice = 10000;
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('image')
+                Tables\Columns\ImageColumn::make('image')  // Filament Tables Columns
                     ->disk('public'),
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('gold_weight'),
-                Tables\Columns\TextColumn::make('price')
+                Tables\Columns\TextColumn::make('name'),  // Filament Tables Columns
+                Tables\Columns\TextColumn::make('gold_weight'),  // Filament Tables Columns
+                Tables\Columns\TextColumn::make('price')  // Filament Tables Columns
                     ->money('VND'),
-                Tables\Columns\TextColumn::make('status')
+                Tables\Columns\TextColumn::make('status')  // Filament Tables Columns
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'draft' => 'gray',
                         'selling' => 'warning',
                         'sold' => 'success',
                         'rebuy' => 'success',
-                        
                     })
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                ExportAction::make()
-                    ->exporter(ItemExporter::class)
+                ExportAction::make()  // Filament Tables Actions
+                    ->exporter(ItemExporter::class)  // ItemExporter class
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Action::make('warranty')
-                    // ->requiresConfirmation()
+                Tables\Actions\EditAction::make(),  // Filament Tables Actions
+                Action::make('warranty')  // Filament Tables Actions
                     ->accessSelectedRecords()
                     ->action(function ($record) {
         
                         $templatePath = public_path('templates/warranty.docx');
                         $fileName = "warranty-". $record->id .".docx";
 
-                        $templateProcessor = new TemplateProcessor($templatePath);   
+                        $templateProcessor = new TemplateProcessor($templatePath);  // PhpOffice\PhpWord
                         $templateProcessor->setValue("NAME", $record->name); 
                         $templateProcessor->setValue("ID", $record->id); 
-                        $templateProcessor->setValue("FROM_DATE", Carbon::now()->format("d-m-Y")); 
-                        $templateProcessor->setValue("TO_DATE", Carbon::now()->addMonths(12)->format("d-m-Y")); 
+                        $templateProcessor->setValue("FROM_DATE", Carbon::now()->format("d-m-Y"));  // Carbon
+                        $templateProcessor->setValue("TO_DATE", Carbon::now()->addMonths(12)->format("d-m-Y"));  // Carbon
                         $tempFilePath = tempnam(sys_get_temp_dir(), 'export') . '.docx';
                         $templateProcessor->saveAs($tempFilePath);
                         return response()->download($tempFilePath, $fileName)->deleteFileAfterSend(true);
@@ -129,7 +107,7 @@ class JewelryItemResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make(),  // Filament Tables Actions
                 ]),
             ]);
     }
@@ -137,16 +115,16 @@ class JewelryItemResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\GemsRelationManager::class,
+            RelationManagers\GemsRelationManager::class,  // Custom application relation manager
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListJewelryItems::route('/'),
-            'create' => Pages\CreateJewelryItem::route('/create'),
-            'edit' => Pages\EditJewelryItem::route('/{record}/edit'),
+            'index' => Pages\ListJewelryItems::route('/'),  // ListJewelryItems page
+            'create' => Pages\CreateJewelryItem::route('/create'),  // CreateJewelryItem page
+            'edit' => Pages\EditJewelryItem::route('/{record}/edit'),  // EditJewelryItem page
         ];
     }
 }
