@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('points_transactions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->string('order_type'); // Ensure it matches model's fillable fields
+            $table->foreignId('customer_id')->constrained()->onDelete('cascade');
+            $table->integer('points');
+            $table->string('description')->nullable();
             $table->timestamps();
-
-            // Foreign key constraint
-            $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
         });
     }
 
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('points_transactions');
     }
 };
