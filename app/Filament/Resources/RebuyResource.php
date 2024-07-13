@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\RebuyResource\Pages;
 use App\Filament\Resources\RebuyResource\RelationManagers;
+use App\Models\Counter;
 use App\Models\Fee;
 use App\Models\GoldPrice;
 use App\Models\Rebuy;
@@ -57,6 +58,13 @@ class RebuyResource extends Resource
                 Forms\Components\TextInput::make('price')
                     // ->numeric()
                     // ->disabled()
+                    ->columnSpan(4),
+                    Forms\Components\Select::make('counter_id')
+                    ->label('Counter Name')
+                    ->options(function() {
+                        return Counter::pluck('name', 'id')->toArray();
+                    })
+                    ->required()
                     ->columnSpan(4),
             ]);
     }
