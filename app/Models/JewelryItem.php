@@ -36,7 +36,12 @@ class JewelryItem extends Model
         
         return new Attribute(
             get: function() {
-                return (($this->gems()->sum('price') + ($this->gold_weight * $this->goldPrice)) + 0) * 1;
+                $latestGoldPrice = GoldPrice::latest()->first();
+                $goldPrice = $latestGoldPrice ? $latestGoldPrice->price : 0;
+
+                $gemsPrice = $this->gems()->sum('price');
+                $totalPrice = ($gemsPrice + ($this->gold_weight * $goldPrice)) * 1;
+                return $totalPrice;
             },
         );
     }

@@ -61,6 +61,10 @@ class Orders extends Model
     {
         return $this->hasOne(Invoice::class, 'order_id');
     }
+    
+    public function counter(){
+        return $this->hasOne(Counter::class, 'order_id');
+    }
 
     public function promotion()
     {
@@ -83,3 +87,4 @@ class Orders extends Model
         );
     }
 }
+

@@ -14,7 +14,7 @@ class Rebuy extends Model
     protected $fillable = [
         "item_id",
         "staff_id",
-        "price"
+        "price",
     ];
 
     public static function boot()

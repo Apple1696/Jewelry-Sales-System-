@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('gems', function (Blueprint $table) {
-            $table->integer('barcode')->nullable()->after('image');
+        Schema::create('gold_prices', function (Blueprint $table) {
+            $table->id();
+            $table->decimal('price', 10, 2);
+            $table->timestamps();
         });
     }
 
@@ -21,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('gems', function (Blueprint $table) {
-            $table->dropColumn('barcode');
-        });
+        Schema::dropIfExists('gold_prices');
     }
 };

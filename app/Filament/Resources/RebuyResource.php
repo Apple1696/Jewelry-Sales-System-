@@ -4,6 +4,9 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\RebuyResource\Pages;
 use App\Filament\Resources\RebuyResource\RelationManagers;
+use App\Models\Counter;
+use App\Models\Fee;
+use App\Models\GoldPrice;
 use App\Models\Rebuy;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -33,11 +36,15 @@ class RebuyResource extends Resource
                     })
                     ->live()
                     ->afterStateUpdated(function ($set, $state) {
+                        $latestGoldPrice = GoldPrice::latest()->first();
+                        $goldPrice = $latestGoldPrice ? $latestGoldPrice->price : 0;
+
                         $item = JewelryItem::find($state);
-                        $price = $item->gold_weight*10000;
-                        foreach($item->gems as $gem) {
+                        $fee = Fee::first();
+                        $price = $item->gold_weight * $goldPrice;
+                        foreach ($item->gems as $gem) {
                             if ($gem->is_gem_stone) {
-                                $price += 0.7 * $gem->price;
+                                $price += ($fee->charge_rate / 100) * $gem->price;
                             }
                         }
                         $set("price", $price);
@@ -51,6 +58,13 @@ class RebuyResource extends Resource
                 Forms\Components\TextInput::make('price')
                     // ->numeric()
                     // ->disabled()
+                    ->columnSpan(4),
+                    Forms\Components\Select::make('counter_id')
+                    ->label('Counter Name')
+                    ->options(function() {
+                        return Counter::pluck('name', 'id')->toArray();
+                    })
+                    ->required()
                     ->columnSpan(4),
             ]);
     }

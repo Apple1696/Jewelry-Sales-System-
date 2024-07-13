@@ -31,6 +31,7 @@ class ItemsOverview extends BaseWidget
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->chart([1,1])
                 ->color('success'),
+
         ];
     }
 }
