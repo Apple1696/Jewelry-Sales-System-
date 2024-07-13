@@ -37,4 +37,5 @@ class Setting extends Model
             ['value' => $value]
         );
     }
+
 }

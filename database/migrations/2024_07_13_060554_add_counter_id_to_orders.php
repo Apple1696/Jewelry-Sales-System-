@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('gold_prices', function (Blueprint $table) {
-            $table->id();
-            $table->decimal('price', 10, 2);
-            $table->timestamps();
+        Schema::table('orders', function (Blueprint $table) {
+            $table->unsignedBigInteger('counter_id')->nullable();
+            $table->foreign('counter_id')->references('id')->nullable()->on('counters')->onDelete('cascade');
         });
     }
 
@@ -23,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('gold_prices');
+        Schema::table('orders', function (Blueprint $table) {
+            //
+        });
     }
 };

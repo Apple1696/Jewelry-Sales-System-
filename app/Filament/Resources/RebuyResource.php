@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Models\JewelryItem;
 use App\Models\User;
+use App\Models\Setting;
 
 class RebuyResource extends Resource
 {
@@ -36,15 +37,14 @@ class RebuyResource extends Resource
                     })
                     ->live()
                     ->afterStateUpdated(function ($set, $state) {
-                        $latestGoldPrice = GoldPrice::latest()->first();
-                        $goldPrice = $latestGoldPrice ? $latestGoldPrice->price : 0;
+                        $goldPrice = (int) Setting::where('key', 'Gold Price')->first()->value;
 
                         $item = JewelryItem::find($state);
-                        $fee = Fee::first();
+                        $fee = (int) Setting::where('key', 'Rebuy Percentant')->first()->value;
                         $price = $item->gold_weight * $goldPrice;
                         foreach ($item->gems as $gem) {
                             if ($gem->is_gem_stone) {
-                                $price += ($fee->charge_rate / 100) * $gem->price;
+                                $price += ($fee / 100) * $gem->price;
                             }
                         }
                         $set("price", $price);

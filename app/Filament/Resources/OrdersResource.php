@@ -8,6 +8,7 @@ use App\Models\Orders;
 use App\Models\Customer;
 use App\Models\Promotion;
 use App\Models\JewelryItem;
+use App\Models\Counter;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -36,6 +37,7 @@ class OrdersResource extends Resource
                 Forms\Components\Grid::make(12)
                     ->schema([
                         Forms\Components\Select::make('order_type')
+                            // ->hidden()
                             ->options([
                                 "rebuy" => "Rebuy",
                                 "sell" => "Sell"
@@ -50,6 +52,12 @@ class OrdersResource extends Resource
                         Forms\Components\Select::make('promotion_id')
                             ->options(function($get) {
                                 return Promotion::isAvailableForCustomer($get('customer_id'))->get()->pluck('name', 'id')->toArray();
+                            })
+                            ->columnSpan(4),
+                        Forms\Components\Select::make('counter_id')
+                            // ->live()
+                            ->options(function() {
+                                return Counter::all()->pluck("name", "id")->toArray();
                             })
                             ->columnSpan(4),
                         // Forms\Components\Repeater::make('details')
@@ -83,6 +91,8 @@ class OrdersResource extends Resource
                 Tables\Columns\TextColumn::make('price')
                     ->label("Price")
                     ->money('VND'),
+                Tables\Columns\TextColumn::make('counter.name')
+                    ->label("Quầy"),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label("Created At"),
                 Tables\Columns\TextColumn::make('updated_at')

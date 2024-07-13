@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\RoleResource\Pages;
-use App\Filament\Resources\RoleResource\RelationManagers;
-use App\Models\Role;
+use App\Filament\Resources\CounterResource\Pages;
+use App\Filament\Resources\CounterResource\RelationManagers;
+use App\Models\Counter;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,9 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class RoleResource extends Resource
+class CounterResource extends Resource
 {
-    protected static ?string $model = Role::class;
+    protected static ?string $model = Counter::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -25,7 +25,10 @@ class RoleResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('name')
+                    ->required(),
+                Forms\Components\TextInput::make('description')
+                // ->required(),
             ]);
     }
 
@@ -33,7 +36,8 @@ class RoleResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('description'),
             ])
             ->filters([
                 //
@@ -58,9 +62,9 @@ class RoleResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListRoles::route('/'),
-            'create' => Pages\CreateRole::route('/create'),
-            'edit' => Pages\EditRole::route('/{record}/edit'),
+            'index' => Pages\ListCounters::route('/'),
+            'create' => Pages\CreateCounter::route('/create'),
+            'edit' => Pages\EditCounter::route('/{record}/edit'),
         ];
     }
 }

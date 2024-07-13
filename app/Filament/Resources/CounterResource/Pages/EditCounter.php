@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\FeeResource\Pages;
+namespace App\Filament\Resources\CounterResource\Pages;
 
-use App\Filament\Resources\FeeResource;
+use App\Filament\Resources\CounterResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditFee extends EditRecord
+class EditCounter extends EditRecord
 {
-    protected static string $resource = FeeResource::class;
+    protected static string $resource = CounterResource::class;
 
     protected function getHeaderActions(): array
     {

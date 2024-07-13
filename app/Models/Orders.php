@@ -22,7 +22,8 @@ class Orders extends Model
         'total_price',
         'customer_id',
         'staff_id',
-        'promotion_id'
+        'promotion_id',
+        'counter_id'
     ];
 
     public static function boot()
@@ -63,7 +64,7 @@ class Orders extends Model
     }
     
     public function counter(){
-        return $this->hasOne(Counter::class, 'order_id');
+        return $this->belongsTo(Counter::class, 'counter_id');
     }
 
     public function promotion()

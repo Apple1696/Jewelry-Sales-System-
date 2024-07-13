@@ -36,11 +36,10 @@ class JewelryItem extends Model
         
         return new Attribute(
             get: function() {
-                $latestGoldPrice = GoldPrice::latest()->first();
-                $goldPrice = $latestGoldPrice ? $latestGoldPrice->price : 0;
-
+                $goldPrice = (int) Setting::where('key', 'Gold Price')->first()->value;
+                $price = (int) Setting::where('key', 'Price Ratio')->first()->value;
                 $gemsPrice = $this->gems()->sum('price');
-                $totalPrice = ($gemsPrice + ($this->gold_weight * $goldPrice)) * 1;
+                $totalPrice = ($gemsPrice + ($this->gold_weight * $goldPrice)) * $price;
                 return $totalPrice;
             },
         );

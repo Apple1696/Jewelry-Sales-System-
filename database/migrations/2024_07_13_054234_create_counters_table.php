@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('fees', function (Blueprint $table) {
+        Schema::create('counters', function (Blueprint $table) {
             $table->id();
-            $table->decimal('wage', 8, 2);
-            $table->decimal('stone_fee', 8, 2);
-            $table->decimal('charge_rate', 5, 2);
-            $table->foreignId('gem_id')->constrained('gems')->onDelete('cascade');
+            $table->string('name');
+            $table->string('description');
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('fees');
+        Schema::dropIfExists('counters');
     }
 };
