@@ -13,7 +13,6 @@ class Counter extends Model
         'revenue',
         'user_id',
         'order_id',
-        'rebuy_id',
     ];
     public function user()
     {
