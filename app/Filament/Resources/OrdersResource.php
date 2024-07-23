@@ -46,7 +46,9 @@ class OrdersResource extends Resource
                         Forms\Components\Select::make('customer_id')
                             ->label('Customer')
                             ->options(function() {
-                                return Customer::all()->pluck("name", "id")->toArray();
+                                return Customer::all()->mapWithKeys(function ($customer) {
+                                    return [$customer->id => $customer->name . ' (' . $customer->phone . ')'];
+                                })->toArray();
                             })
                             ->searchable()
                             ->columnSpan(4),
