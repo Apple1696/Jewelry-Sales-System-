@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Widgets;
+namespace App\Filament\Resources\UserResource\Widgets;
 
 use Filament\Widgets\ChartWidget;
 use App\Models\Orders;
@@ -8,6 +8,8 @@ use Carbon\Carbon;
 
 class MonthlyRevenue extends ChartWidget
 {
+    public string $user_id;
+
     protected static ?string $heading = 'Monthly Revenue';
 
     protected function getData(): array
@@ -18,7 +20,7 @@ class MonthlyRevenue extends ChartWidget
         // Truy vấn dữ liệu từ bảng orders
         $monthlyRevenue = Orders::with('details.item', 'promotion')
             ->whereYear('created_at', $year)
-            // ->where('counter_id', $this->counter_id)
+            ->where('staff_id', $this->user_id)
             ->get()
             ->groupBy(function($date) {
                 return Carbon::parse($date->created_at)->format('m'); // grouping by months

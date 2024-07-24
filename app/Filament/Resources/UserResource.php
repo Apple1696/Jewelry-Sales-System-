@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Models\Role;
 
 class UserResource extends Resource
 {
@@ -49,7 +50,8 @@ class UserResource extends Resource
                             ->maxLength(255)
                             ->required()
                             ->columnSpan(6),                    
-                        Forms\Components\Select::make('roles')->multiple()->relationship('roles', 'name')
+                        Forms\Components\Select::make('role_id')
+                            ->options(Role::all()->pluck('name', 'id'))
                             ->columnSpan(6)
                     ])
             ]);

@@ -102,7 +102,7 @@ class OrdersResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                // Tables\Actions\EditAction::make(),
                 Action::make('Invoice')
                 ->icon('heroicon-m-arrow-down-tray')
                 ->accessSelectedRecords()
