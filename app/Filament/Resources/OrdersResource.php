@@ -37,28 +37,34 @@ class OrdersResource extends Resource
                 Forms\Components\Grid::make(12)
                     ->schema([
                         Forms\Components\Select::make('order_type')
-                            // ->hidden()
+                            ->label('Order Type')
                             ->options([
                                 "rebuy" => "Rebuy",
                                 "sell" => "Sell"
                             ])
                             ->columnSpan(4),
                         Forms\Components\Select::make('customer_id')
-                            ->live()
+                            ->label('Customer')
                             ->options(function() {
-                                return Customer::all()->pluck("name", "id")->toArray();
+                                return Customer::all()->mapWithKeys(function ($customer) {
+                                    return [$customer->id => $customer->name . ' (' . $customer->phone . ')'];
+                                })->toArray();
                             })
+                            ->searchable()
                             ->columnSpan(4),
                         Forms\Components\Select::make('promotion_id')
+                            ->label('Promotion')
                             ->options(function($get) {
                                 return Promotion::isAvailableForCustomer($get('customer_id'))->get()->pluck('name', 'id')->toArray();
                             })
+                            ->searchable()
                             ->columnSpan(4),
                         Forms\Components\Select::make('counter_id')
-                            // ->live()
+                            ->label('Counter')
                             ->options(function() {
                                 return Counter::all()->pluck("name", "id")->toArray();
                             })
+                            ->searchable()
                             ->columnSpan(4),
                         // Forms\Components\Repeater::make('details')
                         //     ->relationship()
@@ -74,7 +80,6 @@ class OrdersResource extends Resource
                         //     ->columnSpan(12)
                         //     ->columns(2)
                     ])
-
             ]);
     }
 
@@ -92,7 +97,7 @@ class OrdersResource extends Resource
                     ->label("Price")
                     ->money('VND'),
                 Tables\Columns\TextColumn::make('counter.name')
-                    ->label("Quầy"),
+                    ->label("Counter"),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label("Created At"),
                 Tables\Columns\TextColumn::make('updated_at')
