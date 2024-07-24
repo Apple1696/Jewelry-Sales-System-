@@ -16,4 +16,13 @@ class EditUser extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            \App\Filament\Resources\UserResource\Widgets\MonthlyRevenue::make([
+                "user_id" => $this->record->id
+            ])
+        ];
+    }
 }

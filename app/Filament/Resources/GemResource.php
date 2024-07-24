@@ -36,6 +36,7 @@ class GemResource extends Resource
                 Forms\Components\FileUpload::make('image')
                     ->disk('public'),
                 Forms\Components\TextInput::make('price'),
+                
             ]);
     }
 
@@ -57,6 +58,8 @@ class GemResource extends Resource
                         'Normal stone' => 'gray',
                         'Gem stone' => 'warning'
                     }),
+                Tables\Columns\TextColumn::make('created_at'),
+                Tables\Columns\TextColumn::make('updated_at'),
             ])
             ->filters([
                 SelectFilter::make('is_gem_stone')

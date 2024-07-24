@@ -16,4 +16,13 @@ class EditCounter extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            \App\Filament\Resources\CounterResource\Widgets\MonthlyRevenue::make([
+                "counter_id" => $this->record->id
+            ])
+        ];
+    }
 }
