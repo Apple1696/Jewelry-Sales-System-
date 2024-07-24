@@ -31,6 +31,12 @@ class LatestOrders extends BaseWidget
                 Tables\Columns\TextColumn::make('staff.name')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('counter.name')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    // ->searchable()
+                    ->sortable(),
                 // Tables\Columns\TextColumn::make('status')
                 //     ->badge(),
             ])

@@ -2,38 +2,42 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Counter;
 use Filament\Widgets\ChartWidget;
 use App\Models\Orders;
 use Carbon\Carbon;
 
 class MonthlyRevenue extends ChartWidget
 {
+    // public $filter = -1;
+
     protected static ?string $heading = 'Monthly Revenue';
 
     protected function getData(): array
     {
-        // Lấy năm hiện tại
+        $activeFilter = $this->filter;
+
         $year = Carbon::now()->year;
 
-        // Truy vấn dữ liệu từ bảng orders
-        $monthlyRevenue = Orders::with('details.item', 'promotion')
-            ->whereYear('created_at', $year)
-            // ->where('counter_id', $this->counter_id)
-            ->get()
-            ->groupBy(function($date) {
-                return Carbon::parse($date->created_at)->format('m'); // grouping by months
-            })
-            ->map(function($row) {
-                return $row->sum(function($order) {
-                    return $order->price; // tính tổng doanh thu cho mỗi tháng
-                });
-            })
-            ->toArray();
+        $query = Orders::with('details.item', 'promotion')
+            ->whereYear('created_at', $year);
 
-        // Khởi tạo mảng dữ liệu doanh thu 12 tháng với giá trị ban đầu là 0
+        if ($activeFilter !== '0') {
+            $query->where('counter_id', $activeFilter);
+        }
+
+        $orders = $query->get();
+
+        $monthlyRevenue = $orders->groupBy(function($date) {
+            return Carbon::parse($date->created_at)->format('m'); // grouping by months
+        })->map(function($row) {
+            return $row->sum(function($order) {
+                return $order->price; // tính tổng doanh thu cho mỗi tháng
+            });
+        })->toArray();
+
         $data = array_fill(1, 12, 0);
 
-        // Điền dữ liệu doanh thu vào mảng theo tháng
         foreach ($monthlyRevenue as $month => $total) {
             $data[(int)$month] = $total;
         }
@@ -49,8 +53,16 @@ class MonthlyRevenue extends ChartWidget
         ];
     }
 
+    protected function getFilters(): ?array
+    {
+        $filters = Counter::all()->pluck('name', 'id')->toArray();
+        $filters = [0 => "Tất cả"] + $filters; // Đặt "Tất cả" với giá trị 0
+        return $filters;
+    }
+
     protected function getType(): string
     {
         return 'line';
     }
 }
+

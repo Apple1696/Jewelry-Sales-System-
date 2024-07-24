@@ -23,7 +23,8 @@ class Orders extends Model
         'customer_id',
         'staff_id',
         'promotion_id',
-        'counter_id'
+        'counter_id',
+        'number'
     ];
 
     public static function boot()
