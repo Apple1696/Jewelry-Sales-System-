@@ -23,7 +23,7 @@ class RebuyResource extends Resource
 {
     protected static ?string $model = Rebuy::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-scale';
 
     protected static ?string $navigationGroup = "Jewelry";
 

@@ -24,7 +24,7 @@ class OrdersResource extends Resource
 {
     protected static ?string $model = Orders::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-arrow-path-rounded-square';
+    protected static ?string $navigationIcon = 'heroicon-o-newspaper';
 
     protected static ?string $recordTitleAttribute = 'number';
 
@@ -184,14 +184,23 @@ class OrdersResource extends Resource
                         $tempFilePath = tempnam(sys_get_temp_dir(), 'export') . '.docx';
                         $rowIndex = 1;
                         $templateProcessor->cloneRow('ITEM_NAME', $record->details->count());
-                        foreach ($record->details as $detail) {
+                        foreach ($record->details as $detail) { 
                             $templateProcessor->setValue("INDEX#{$rowIndex}", $rowIndex);
                             $templateProcessor->setValue("PERCENTANT#{$rowIndex}", $record->promotion->discount_percentage);
                             $templateProcessor->setValue("ITEM_NAME#{$rowIndex}", $detail->item->name);
-                            $templateProcessor->setValue("ITEM_PRICE#{$rowIndex}", (1 - ($record->promotion->discount_percentage / 100)) * $detail->item->price);
+                            
+                            // Calculate the final item price after applying the discount
+                            $finalItemPrice = (1 - ($record->promotion->discount_percentage / 100)) * $detail->item->price;
+                            // Format the final item price and item price as VND
+                            $formattedFinalItemPrice = number_format($finalItemPrice, 0, ',', '.') . ' VND';
+                            $formattedItemPrice = number_format($detail->item->price, 0, ',', '.') . ' VND';
+                            
+                            $templateProcessor->setValue("FINAL_ITEM_PRICE#{$rowIndex}", $formattedFinalItemPrice);
+                            $templateProcessor->setValue("ITEM_PRICE#{$rowIndex}", $formattedItemPrice);
+                            
                             $rowIndex++;
                         }
-                        $templateProcessor->setValue("INVOICE_PRICE", $record->price);
+                        $templateProcessor->setValue("INVOICE_PRICE", number_format($record->price, 0, ',', '.') . ' VND');
                         $templateProcessor->saveAs($tempFilePath);
                         return response()->download($tempFilePath, $fileName)->deleteFileAfterSend(true);
                     }),

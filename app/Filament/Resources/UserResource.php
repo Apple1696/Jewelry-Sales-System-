@@ -13,12 +13,13 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Models\Role;
+use App\Models\Counter;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-circle';
 
     protected static ?string $navigationGroup = "Management";
 
@@ -39,7 +40,7 @@ class UserResource extends Resource
                         ->maxLength(255)
                         ->required()
                         ->columnSpan(6)
-                        ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                        // ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                         ->dehydrated(fn ($state) => filled($state))
                         ->required(fn (string $context): bool => $context === 'create'),                      
                 ]),
@@ -52,7 +53,15 @@ class UserResource extends Resource
                             ->columnSpan(6),                    
                         Forms\Components\Select::make('role_id')
                             ->options(Role::all()->pluck('name', 'id'))
+                            ->reactive()
+                            ->columnSpan(6),
+                        Forms\Components\Select::make('counter_id')
+                            ->options(Counter::all()->pluck('name', 'id'))
+                            ->hidden(function($get) {
+                                return Role::find($get('role_id'))?->name == "manager";
+                            })
                             ->columnSpan(6)
+
                     ])
             ]);
     }
@@ -61,7 +70,11 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('email')
+                Tables\Columns\TextColumn::make('email'),
+                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('role.name'),
+                Tables\Columns\TextColumn::make('created_at'),
+                Tables\Columns\TextColumn::make('updated_at'),
             ])
             ->filters([
                 //
