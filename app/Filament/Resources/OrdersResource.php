@@ -24,7 +24,7 @@ class OrdersResource extends Resource
 {
     protected static ?string $model = Orders::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-arrow-path-rounded-square';
 
     protected static ?string $recordTitleAttribute = 'number';
 
@@ -110,11 +110,12 @@ class OrdersResource extends Resource
                                                     ->disabled()
                                                     // ->dehydrated()
                                                     ->numeric()
-                                                    ->required()
+                                                    ->required(),
                                                
-                                                // Forms\Components\TextInput::make('quantity')
-                                                //     ->numeric()
-                                                //     ->minValue(0),
+                                                Forms\Components\Hidden::make('quantity')
+                                                    ->default(1)
+                                                    // ->numeric()
+                                                    // ->minValue(0),
                                             ])
                                             ->columnSpan(12)
                                             ->columns(2)
